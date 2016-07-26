@@ -1,0 +1,73 @@
+<!-- http://plnkr.co/edit/XoGDuN?p=preview -->
+<div class="horizontal-scroll">
+  <div class="form-group select-page-size-wrap ">
+    <label>Rows on page
+      <select class="form-control selectpicker show-tick" title="Rows on page" selectpicker
+              ng-model="dataTablePageSize" ng-options="i for i in [5,10,15,20,25]">
+      </select>
+    </label>
+  </div>
+  <table id="history-table" class="table history-table" st-table="dataTableInit" st-safe-src="dataTable">
+    <thead>
+    <tr class="sortable ">
+      <th class="table-id" st-sort="id" st-sort-default="false"><i class="fa fa-list-ol" aria-hidden="true"></i></th>
+      <th st-sort="date"><i class="fa fa-calendar" aria-hidden="true"></i> Date</th>
+      <th st-sort="ips"><i class="fa fa-globe" aria-hidden="true"></i> IPS</th>
+      <th st-sort="server"><i class="fa fa-server" aria-hidden="true"></i> Server</th>
+      <th st-sort="download"><i class="fa fa-cloud-download" aria-hidden="true"></i> Download</th>
+      <th st-sort="upload"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</th>
+      <th st-sort="latency"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Latency</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th><input st-search="date" placeholder="Search Date" class="input-sm form-control search-input"
+                 type="search"/></th>
+      <th><input st-search="ips" placeholder="Search IPS" class="input-sm form-control search-input"
+                 type="search"/></th>
+      <th><input st-search="server" placeholder="Search Server" class="input-sm form-control search-input"
+                 type="search"/></th>
+      <th><input st-search="download" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="upload" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="latency" placeholder="Search Latency" class="input-sm form-control search-input" type="search"/>
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in dataTableInit">
+      <td class="table-id line-height-25">{{item.id}}</td>
+      <td class="line-height-25">{{item.startTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+      <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.ips}}</td>
+      <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.serverName}}</td>
+      <td class="line-height-25">max: {{item.downloadSpeed}} Mb/s</br>avg: {{item.maxDownloadSpeed}} Mb/s</td>
+      <td class="line-height-25">max: {{item.uploadSpeed}} Mb/s</br>avg: {{item.maxUploadSpeed}} Mb/s</td>
+      <td class="line-height-25">min: {{item.latency}} ms</br>avg: {{item.minLatency}} ms</td>
+      <td class="line-height-25">
+      	<a href ng-click="openHistoryDetailModal({{item}})"><i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px;color: blue;"></i></a>
+       	<a href ng-click="openConfirm({{item.id}})"><i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="6" class="text-center">
+        <div st-pagination="" st-items-by-page="dataTablePageSize" st-displayed-pages="5"></div>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script type="text/ng-template" id="confirmContentModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirm History Delete!</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure to delete History record ID#{{historyId}} from system ?</>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()">Delete</button>
+        </div>
+</script>

@@ -1,0 +1,15 @@
+<div class="modal-content">
+  <div class="modal-header bg-info">
+    <button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+      <em class="ion-ios-close-empty sn-link-close"></em>
+    </button>
+    <i class="ion-map modal-icon"></i><span> Location</span>
+  </div>
+  <div class="modal-body" style="min-width: 300px;">
+	  <ng-map center="[{{lat}}, {{lng}}]">
+		<marker position="{{lat}}, {{lng}}" title="I'm here!" animation="BOUNCE"></marker>
+	  </ng-map>
+  </div>
+  <div class="modal-footer">
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="widgets">
+  <div class="row">
+	<uib-tabset>
+	  <uib-tab heading="History graph">
+	       <div ba-panel ba-panel-class="with-scroll">
+              <highchart id="graphHistoryConfig" config="graphHistoryConfig" class="span10"></highchart>
+           </div>
+      </uib-tab>
+	  <uib-tab heading="History data">
+	  	<div ba-panel ba-panel-class="with-scroll">
+	        <div include-with-scope="app/pages/history/widgets/smartTable.html"></div>
+	    </div>
+	  </uib-tab>
+	</uib-tabset>
+  </div>
+</div>

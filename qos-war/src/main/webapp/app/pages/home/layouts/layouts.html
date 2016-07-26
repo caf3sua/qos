@@ -1,0 +1,40 @@
+<div class="widgets">
+	<div class="row" ng-controller="HomePageCtrl as home" data-ng-init="initSlide()">
+	    <div class="col-md-12 center-content" style="margin-bottom: 20px;">
+	        <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+	            <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+	                 <img ng-src="{{slide.image}}" style="margin:auto;">
+	                 <div class="carousel-caption">
+	                     <h4>Bitel {{slide.id}}</h4>
+	                     <p>{{slide.text}}</p>
+	                 </div>
+	             </uib-slide>
+	        </uib-carousel>
+	   </div>
+	</div>
+	
+  	<div class="row">
+      <div class="col-sm-4">
+        <h4>Centros de atención</h4>
+        <div class="img-wrapper"><img ng-src="{{::( 'app/typography/typo04.png' | appImage )}}" alt=""/></div>
+        <p>Eget augue, lacus erat ante egestas scelerisque aliquam, metus molestie leo in habitasse magna
+          maecenas</p>
+        <a href class="learn-more">Lean more</a>
+      </div>
+      <div class="col-sm-4">
+        <h4>Distribuidores</h4>
+        <div class="img-wrapper"><img ng-src="{{::( 'app/typography/typo05.png' | appImage )}}" alt=""/></div>
+        <p>Augue massa et parturient, suspendisse orci nec scelerisque sit, integer nam mauris pede consequat
+          in
+          velit</p>
+        <a href class="learn-more">Lean more</a>
+      </div>
+      <div class="col-sm-4">
+        <h4>Puntos de recarga y de pago</h4>
+        <div class="img-wrapper"><img ng-src="{{::( 'app/typography/typo06.png' | appImage )}}" alt=""/></div>
+        <p>Eget turpis, tortor lobortis porttitor, vestibulum nullam vehicula aliquam</p>
+        <a href class="learn-more">Lean more</a>
+      </div>
+    </div>
+
+</div>

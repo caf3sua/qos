@@ -1,0 +1,141 @@
+<div class="modal-content">
+  <div class="modal-header bg-info">
+    <button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+      <em class="ion-ios-close-empty sn-link-close"></em>
+    </button>
+    <i class="ion-ios-barcode-outline modal-icon"></i><span> History Detail</span>
+  </div>
+  <div class="modal-body text-center">
+  	<div ba-panel
+	     ba-panel-class="tabs-panel xsmall-panel with-scroll">
+	  <uib-tabset>
+	    <uib-tab heading="Information">
+	      <p>
+	        <table class="table">
+			    <tbody style="text-align: left">
+				    <tr>
+				      <td class="table-id-info">ID</td>
+				      <td>{{item.id}}</td>
+				    </tr>
+				    <tr>
+				      <td>Application type</td>
+				      <td>{{item.applicationType}}</td>
+				    </tr>
+			    	<tr>
+				      <td>Server name</td>
+				      <td>{{item.serverName}}</td>
+				    </tr>
+				    <tr>
+				      <td>IPS</td>
+				      <td>{{item.ips}}</td>
+				    </tr>
+				    <tr>
+				      <td>Duration</td>
+				      <td>{{item.duration}} ms</td>
+				    </tr>
+				    <tr>
+				      <td>IP address</td>
+				      <td>{{item.ipAddress}}</td>
+				    </tr>
+				    <tr>
+				      <td>Department zone</td>
+				      <td>{{item.departmentZone}}</td>
+				    </tr>
+				    <tr>
+				      <td>Province</td>
+				      <td>{{item.province}}</td>
+				    </tr>
+				    <tr>
+				      <td>District</td>
+				      <td>{{item.district}}</td>
+				    </tr>
+				    <tr>
+				      <td>Address</td>
+				      <td>{{item.address}}</td>
+				    </tr>
+			    </tbody>
+			  </table>
+	      </p>
+	    </uib-tab>
+	    <uib-tab heading="Network Connection">
+	      <p>
+	        <table class="table">
+			    <tbody style="text-align: left">
+				    <tr>
+				      <td>Download speed</td>
+				      <td>{{item.downloadSpeed}} Mb/s</td>
+				    </tr>
+				    <tr>
+				      <td>Max Download speed</td>
+				      <td>{{item.maxDownloadSpeed}} Mb/s</td>
+				    </tr>
+				    <tr>
+				      <td>Upload speed</td>
+				      <td>{{item.uploadSpeed}} Mb/s</td>
+				    </tr>
+				    <tr>
+				      <td>Max Upload speed</td>
+				      <td>{{item.maxUploadSpeed}} Mb/s</td>
+				    </tr>
+				    <tr>
+				      <td>Package Loss</td>
+				      <td>{{item.packageLoss}}</td>
+				    </tr>
+				    <tr>
+				      <td>Latency</td>
+				      <td>{{item.latency}} ms</td>
+				    </tr>
+				    <tr>
+				      <td>Min latency</td>
+				      <td>{{item.minLatency}} ms</td>
+				    </tr>
+				    <tr>
+				      <td>Variation latency</td>
+				      <td>{{item.variationLatency}} ms</td>
+				    </tr>
+			    </tbody>
+			  </table>
+	      </p>
+	    </uib-tab>
+	    <uib-tab heading="GMS">
+	      <p>
+	        <table class="table">
+			    <tbody style="text-align: left">
+				    <tr>
+				      <td>GPS</td>
+				      <td>{{item.latitudes}}/{{item.longitudes}}</td>
+				    </tr>
+				    <tr>
+				      <td>MCC</td>
+				      <td>{{item.mcc}}</td>
+				    </tr>
+				    <tr>
+				      <td>MNC</td>
+				      <td>{{item.mnc}}</td>
+				    </tr>
+				    <tr>
+				      <td>Network Technology</td>
+				      <td>{{item.networkTechnology}}</td>
+				    </tr>
+				    <tr>
+				      <td>Cid</td>
+				      <td>{{item.cid}}</td>
+				    </tr>
+				    <tr>
+				      <td>LACS</td>
+				      <td>{{item.lac}}</td>
+				    </tr>
+				    <tr>
+				      <td>Signal Strength</td>
+				      <td>{{item.signalStrength}}</td>
+				    </tr>
+			    </tbody>
+			  </table>
+	      </p>
+	    </uib-tab>
+	  </uib-tabset>
+	</div>
+  <div class="modal-footer">
+  	<button type="button" class="btn btn-info" ng-click="$dismiss()">OK</button>
+  </div>
+</div>

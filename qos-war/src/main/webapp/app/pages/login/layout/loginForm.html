@@ -1,0 +1,39 @@
+<form role="form" ng-submit="lc.login()" >
+	<fieldset ng-disabled="isSubmitted">
+		<div class="form-group">
+			<div ng-show="lc.error" class="qos-alert">{{lc.error}}</div>
+		</div>
+	  <div class="form-group" ng-class="{ 'has-error': form.username.$dirty && (form.username.$error.required || form.username.$error.username) }">
+	    <label for="username">Username/number</label>
+	    <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+          <input type="text" class="form-control" name="username"  id="username" placeholder="Username or number" ng-model="lc.user.username" required >
+        </div>
+	    <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username/number is required</span>
+   		<span ng-show="form.username.$dirty && form.username.$error.username" class="help-block">Username/number is invalid</span>
+   		<!-- 
+   		<div class="input-group margin-bottom-sm">
+		  <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i></span>
+		  <input class="form-control" type="text" placeholder="Email address">
+		</div>
+		 -->
+	  </div>
+	  <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+	    <label for="password">Password</label>
+	    <div class="input-group">
+		  <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+		  <input type="password" class="form-control" id="password" name="password" placeholder="Password" ng-model="lc.user.password" required >
+		</div>
+	    <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+	  </div>
+	  <div class="checkbox">
+	    <label class="custom-checkbox">
+	      <input type="checkbox">
+	      <span>Remember me</span>
+	    </label>
+	  </div>
+	  <button type="submit" class="btn btn-warning" ng-disabled="form.$invalid || dataLoading"  ><i class="fa fa-sign-in fa-fw"></i> Sign in</button>
+	  <img ng-if="lc.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+		<a href="#/register" class="btn btn-link">Register</a>
+	</fieldset>
+</form>
