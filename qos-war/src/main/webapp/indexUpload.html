@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Porthole Demo</title>
+		<script type="text/javascript" src="lib/jquery.js"></script>
+		<script type="text/javascript" src="lib/jquery-plugin/porthole/porthole.min.js"></script>
+		<script type="text/javascript">
+		
+			function onMessage(messageEvent) {
+				//if (messageEvent.origin == serverUrl) {
+					var task = messageEvent.data.task;
+		        	var result = messageEvent.data.data;
+		        	var time = messageEvent.data.time;
+		        	
+		        	parent.postMessage( {'task': task, 'data': result, 'time': time}, messageEvent.origin );
+				//}
+			}
+			
+			var windowProxy;
+			var serverUrl;
+			
+			$(function(){
+				serverUrl =  window.parent.$("#serverContextUrl").val();
+				console.log(serverUrl);
+				
+				$('#UploadIFrame').attr('src', serverUrl + '/upload.html');
+				
+				// Create a proxy window to send to and receive message from the guest iframe
+				windowProxy = new Porthole.WindowProxy(serverUrl + '/proxy.html', 'UploadIFrame');
+				windowProxy.addEventListener(onMessage);
+					
+				$("#uploadCORSBtn").on( "click", function() {
+					console.log('Start uploadCORSBtn');
+					  
+			    	var postData = {'task': 'upload', 'target_origin' : serverUrl};
+//			    	windowProxy.post(postData);
+//			    	receiverIframe.postMessage(postData, $rootScope.selectedServer.url);	
+					windowProxy.post(postData);
+					console.log('post data');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<p>
+			<input type="hidden" id="DownloadData" name="DownloadData" > 
+ 			<input type="hidden" id="DownloadTime" name="DownloadTime" >
+		</p>
+		<div>
+			<input type="button" value="Upload" id="uploadCORSBtn" /> 
+		</div>
+		<div>
+			<h3>Frame 1</h3>
+			<iframe id="UploadIFrame" name="UploadIFrame" width="500px" height="150px" frameborder="1" src="" scrolling="no"></iframe>
+		</div>
+	</body>
+</html>

@@ -8,7 +8,8 @@
             http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <task:annotation-driven/>
-
+    <!-- 
     <bean id="newJobSchedulingWorker" class="com.viettelperu.qos.core.NewJobSchedulingWorker"/>
     <bean id="retryJobSchedulingWorker" class="com.viettelperu.qos.core.RetryJobSchedulingWorker"/>
+     -->
 </beans>

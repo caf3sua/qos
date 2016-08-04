@@ -1,14 +1,12 @@
 /**
  * @author Nam, Nguyen Hoai
  * created on 16.12.2015
- * http://jsfiddle.net/simpulton/XqDxG/
  */
 (function () {
   'use strict';
 
   angular.module('BlurAdmin.pages.dashboard')
   .controller('InfoModalCtrl', ['$scope', '$timeout', '$uibModalInstance', 'deviceDetector', 'CommonService', InfoModalCtrl]);
-
 
   /** @ngInject */
   function InfoModalCtrl($scope, $timeout, $uibModalInstance, deviceDetector, CommonService ) {
@@ -30,10 +28,10 @@
   }
   
   angular.module('BlurAdmin.pages.dashboard')
-  .controller('DashboardPieChartCtrl', ['$scope', '$timeout', 'baConfig', 'baUtil', 'deviceDetector', 'CommonService', '$uibModal', 'sharedService', DashboardPieChartCtrl]);
+  .controller('DashboardPieChartCtrl', ['$rootScope', '$scope', '$timeout', 'baConfig', 'baUtil', 'deviceDetector', 'CommonService', '$uibModal', 'sharedService', 'AppUtil', DashboardPieChartCtrl]);
   
   /** @ngInject */
-  function DashboardPieChartCtrl($scope, $timeout, baConfig, baUtil, deviceDetector, CommonService, $uibModal, sharedService) {
+  function DashboardPieChartCtrl($rootScope, $scope, $timeout, baConfig, baUtil, deviceDetector, CommonService, $uibModal, sharedService, AppUtil) {
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
     $scope.data = deviceDetector;
     $scope.allData = JSON.stringify($scope.data, null, 2);
@@ -47,16 +45,18 @@
       description: 'Download',
       stats: '--',
       average: '--',
-      unit: 'Mb/s',
+      unit: $rootScope.bitrateType.name,
       icon: 'download',
+      panel_icon: 'panel_down.png',
       loading: false
     }, {
       color: pieColor,
       description: 'Upload',
       stats: '--',
       average: '--',
-      unit: 'Mb/s',
+      unit: $rootScope.bitrateType.name,
       icon: 'upload',
+      panel_icon: 'panel_up.png',
       loading: false
     }, {
       color: pieColor,
@@ -65,42 +65,43 @@
       average: '--',
       unit: 'ms',
       icon: 'sync',
+      panel_icon: 'panel_latency.png',
       loading: false
     }
     ];
 
-    function getRandomArbitrary(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+//    function getRandomArbitrary(min, max) {
+//      return Math.random() * (max - min) + min;
+//    }
 
-    function loadPieCharts() {
-      $('.chart').each(function () {
-        var chart = $(this);
-        chart.easyPieChart({
-          easing: 'easeOutBounce',
-          onStep: function (from, to, percent) {
-            $(this.el).find('.percent').text(Math.round(percent));
-          },
-          barColor: chart.attr('rel'),
-          trackColor: 'rgba(0,0,0,0)',
-          size: 84,
-          scaleLength: 0,
-          animation: 2000,
-          lineWidth: 9,
-          lineCap: 'round',
-        });
-      });
+//    function loadPieCharts() {
+//      $('.chart').each(function () {
+//        var chart = $(this);
+//        chart.easyPieChart({
+//          easing: 'easeOutBounce',
+//          onStep: function (from, to, percent) {
+//            $(this.el).find('.percent').text(Math.round(percent));
+//          },
+//          barColor: chart.attr('rel'),
+//          trackColor: 'rgba(0,0,0,0)',
+//          size: 84,
+//          scaleLength: 0,
+//          animation: 2000,
+//          lineWidth: 9,
+//          lineCap: 'round',
+//        });
+//      });
+//
+//      $('.refresh-data').on('click', function () {
+//        updatePieCharts();
+//      });
+//    }
 
-      $('.refresh-data').on('click', function () {
-        updatePieCharts();
-      });
-    }
-
-    function updatePieCharts() {
-      $('.pie-charts .chart').each(function(index, chart) {
-        $(chart).data('easyPieChart').update(getRandomArbitrary(55, 90));
-      });
-    }
+//    function updatePieCharts() {
+//      $('.pie-charts .chart').each(function(index, chart) {
+//        $(chart).data('easyPieChart').update(getRandomArbitrary(55, 90));
+//      });
+//    }
     
     function updateSpeedData(status, data) {
     	// Broadcast status (-1: Begin , 0: Downloading, 1: Uploading, 2: End)
@@ -126,9 +127,8 @@
     		$scope.charts[2].loading = true;
     		
     		// Calculate value download
-    		var maxDownload = Math.max.apply( Math, data );
-    		maxDownload = maxDownload.toFixed(2);
-    		var aveDownload = calAverage(data, 2);
+    		var maxDownload = AppUtil.maxPoint(data );
+    		var aveDownload = AppUtil.averagePoint(data, 2);
     		$scope.charts[0].stats = maxDownload;
     		$scope.charts[0].average = aveDownload;
     	} 
@@ -140,27 +140,16 @@
     		// Calculate value latency
     		var latencyArr = data.latency;
     		var minLatency = Math.min.apply( Math, latencyArr );
-    		var aveLatency = calAverage(latencyArr, 0);
+    		var aveLatency = AppUtil.average(latencyArr, 0);
     		$scope.charts[2].stats = minLatency;
     		$scope.charts[2].average = aveLatency;
     		// Calculate value upload
-    		var maxUpload = Math.max.apply( Math, data.upload );
-    		maxUpload = maxUpload.toFixed(2);
-    		var aveUpload = calAverage(data.upload, 2);
+    		var maxUpload = AppUtil.maxPoint(data.upload );
+    		var aveUpload = AppUtil.averagePoint(data.upload, 2);
     		$scope.charts[1].stats = maxUpload;
     		$scope.charts[1].average = aveUpload;
     	}
     }
-    
-    function calAverage(values, roundNumber) {
-    	  // Initialise sum with a number value
-    	  var sum = 0;
-    	  for (var i=0, iLen=values.length; i<iLen; i++) {
-    	    sum += +values[i];
-    	  }
-    	  // Just return the result of the calculation
-    	  return (sum / values.length).toFixed(roundNumber);
-    	}
     
     $scope.openInfoModal = function (size) {
 	      var uibModalInstance = $uibModal.open({
@@ -180,12 +169,12 @@
 	      }, function () {
 	    	  console.log('Modal dismissed at: ' + new Date());
 	      });
-  };
+    };
 
-    $timeout(function () {
-    	loadPieCharts();
-    	updatePieCharts();
-    }, 1000);
+//    $timeout(function () {
+//    	loadPieCharts();
+//    	updatePieCharts();
+//    }, 1000);
     
     $scope.$on('handleBroadcast', function() {
         $scope.message = sharedService.message;

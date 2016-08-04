@@ -16,5 +16,7 @@
         <mapping class="com.viettelperu.qos.model.entity.Category" />
         <mapping class="com.viettelperu.qos.model.entity.FileUpload" />
         <mapping class="com.viettelperu.qos.model.entity.SpeedTestHistory" />
+        <mapping class="com.viettelperu.qos.model.entity.User" />
+        <mapping class="com.viettelperu.qos.model.entity.Server" />
     </session-factory>
 </hibernate-configuration> 

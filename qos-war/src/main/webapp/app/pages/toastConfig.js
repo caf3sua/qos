@@ -8,8 +8,8 @@ var toastConfig = {
   autoDismiss: false,
   positionClass: 'toast-bottom-center',
   type: 'info',
-  timeOut: '3000',
-  extendedTimeOut: '1000',
+  timeOut: '2000',
+  extendedTimeOut: '500',
   allowHtml: false,
   closeButton: false,
   tapToDismiss: true,
@@ -23,6 +23,22 @@ var toastConfig = {
   msg: "You just run speed test completed."
 };
 
+var toastQuotesSetting = [
+ 	 {
+ 	   title: 'Well done!',
+ 	   message: 'You successfully update setting.',
+ 	   options: {
+ 	     allowHtml: true
+ 	   }
+ 	 },
+ 	 {
+ 	   title: 'Error!',
+ 	   message: 'The update setting has failed. Please try again!.',
+ 	   options: {
+ 	     allowHtml: true
+ 	   }
+ 	 },
+ ];
     
 var toastQuotesHistory = [
 	 {
@@ -34,7 +50,7 @@ var toastQuotesHistory = [
 	 },
 	 {
 	   title: 'Error!',
-	   message: 'The history record cannot be deleted',
+	   message: 'The search has failed. Please try again!',
 	   options: {
 	     allowHtml: true
 	   }
@@ -54,4 +70,35 @@ var toastQuotesHistory = [
 	   }
 	 }
 ];
+
+var toastQuotesApp = [
+      {
+          title: 'Well done!',
+          message: 'You just run speed test completed.',
+          options: {
+            allowHtml: true
+          }
+        },
+        {
+          title: 'No <em>login</em> yet!',
+          message: 'Please <strong><a href="#/login">login</a></strong> to show your history',
+          options: {
+            allowHtml: true
+          }
+        },
+        {
+	        title: 'Good job!',
+	        message: 'A history record added into system successfull.',
+	        options: {
+	          allowHtml: true
+	        }
+	      },
+	      {
+	          title: 'Error!',
+	          message: 'Ping server fail. Please try again later.',
+	          options: {
+	            allowHtml: true
+	          }
+	        }
+      ];
 

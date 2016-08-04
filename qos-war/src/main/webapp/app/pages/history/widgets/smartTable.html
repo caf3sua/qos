@@ -40,9 +40,9 @@
       <td class="line-height-25">{{item.startTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
       <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.ips}}</td>
       <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.serverName}}</td>
-      <td class="line-height-25">max: {{item.downloadSpeed}} Mb/s</br>avg: {{item.maxDownloadSpeed}} Mb/s</td>
-      <td class="line-height-25">max: {{item.uploadSpeed}} Mb/s</br>avg: {{item.maxUploadSpeed}} Mb/s</td>
-      <td class="line-height-25">min: {{item.latency}} ms</br>avg: {{item.minLatency}} ms</td>
+      <td class="line-height-25">max: {{item.maxDownloadSpeed}} Mbps</br>avg: {{item.downloadSpeed}} Mbps</td>
+      <td class="line-height-25">max: {{item.maxUploadSpeed}} Mbps</br>avg: {{item.uploadSpeed}} Mbps</td>
+      <td class="line-height-25">min: {{item.minLatency}} ms</br>avg: {{item.latency}} ms</td>
       <td class="line-height-25">
       	<a href ng-click="openHistoryDetailModal({{item}})"><i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px;color: blue;"></i></a>
        	<a href ng-click="openConfirm({{item.id}})"><i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i></a>

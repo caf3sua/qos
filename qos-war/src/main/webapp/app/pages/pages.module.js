@@ -10,6 +10,7 @@
 
     'BlurAdmin.pages.home',
     'BlurAdmin.pages.dashboard',
+    'BlurAdmin.pages.file',
 //    'BlurAdmin.pages.ui',
 //    'BlurAdmin.pages.components',
 //    'BlurAdmin.pages.tables',

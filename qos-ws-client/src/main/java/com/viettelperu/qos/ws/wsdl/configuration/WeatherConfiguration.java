@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2016 Bitel Peru and/or its affiliates. All rights reserved.
+ */
 package com.viettelperu.qos.ws.wsdl.configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -6,7 +9,14 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.viettelperu.qos.ws.wsdl.client.WeatherClient;
 
+/**
+ * Using for testing purpose
+ * 
+ * @author Nam, Nguyen Hoai <namnh@itsol.vn>
+ *
+ */
 @Configuration
+@Deprecated
 public class WeatherConfiguration {
 
 	@Bean

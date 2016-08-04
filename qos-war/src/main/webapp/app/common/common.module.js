@@ -8,6 +8,11 @@ commonModule.constant('BackendCfg',  {
     setupHttp: function(http) {
         http.defaults.useXDomain = true;
         http.defaults.withCredentials = true;
+    },
+    contextPath: function(location) {
+    	var contextPath = location.href;
+    	contextPath = contextPath.substr(0, contextPath.indexOf('#'));
+    	return contextPath;
     }
 });
 

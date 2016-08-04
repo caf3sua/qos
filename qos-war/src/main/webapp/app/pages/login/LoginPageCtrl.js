@@ -13,6 +13,9 @@
 	  	var lc = this;
 
 	    (function initController() {
+	    	lc.dataLoading = false;
+            $rootScope.isSubmitted = false;
+            
 	        // reset login status
 	        AuthService.clearCredentials();
 	    })();

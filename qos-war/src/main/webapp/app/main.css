@@ -1496,7 +1496,7 @@ a.see-all-icons {
   background-color: #e85656; }
 
 .toast-info {
-  background-color: #2dacd1; }
+  background-color: #209e91 /*#2dacd1*/; }
 
 .toast-warning {
   background-color: #dfb81c; }
@@ -2791,11 +2791,14 @@ a {
 
 .al-footer-main {
   float: left;
-  margin-left: 15px; }
+  margin-left: 15px;
+  margin-top: 5px; }
 
 .al-copy {
+  margin-top: 10px;
   margin-bottom: 10px;
-  float: left; }
+  text-align: center;
+  /*float: left;*/ }
 
 .al-footer-right {
   float: right;
@@ -3043,6 +3046,17 @@ a {
   .socicon-behace:before {
     content: "H"; }
 
+.socicon-youtube {
+  background-color: #e02a20; }
+  .socicon-youtube:before {
+    content: "r"; }
+
+.socicon-instagram {
+  background-color: #000000; }
+  .socicon-instagram:before {
+    content: "x"; }
+
+        
 .table {
   margin-bottom: 0px; }
   .table > thead > tr > th {
@@ -4934,9 +4948,12 @@ a.fc-more {
     padding: 5px 0 0 20px;
     font-size: 18px;
     opacity: 0.9; }
-    .pie-charts .description .description-stats {
+    .pie-charts .description {
       padding-top: 8px;
-      font-size: 24px; }
+      font-size: 20px; }
+    .description-stats {
+      padding-top: 8px;
+      font-size: 20px; }
   .pie-charts .angular {
     margin-top: 100px; }
   .pie-charts .angular .chart {

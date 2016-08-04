@@ -5,8 +5,8 @@
 
 'use strict';
 angular.module('BlurAdmin.theme')
-    .service('AuthService', ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg',
-        function (Base64, $http, $cookieStore, $rootScope, $timeout, BackendCfg) {
+    .service('AuthService', ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg', 'CommonService',
+        function (Base64, $http, $cookieStore, $rootScope, $timeout, BackendCfg, CommonService) {
             var service = this;
             service.sayHello = function (username, password) {
                 console.log('say hello username: '+ username);
@@ -28,7 +28,7 @@ angular.module('BlurAdmin.theme')
                 console.log('encryptedPassword: '+user.encryptedPassword);
                 console.log('pass: '+user.password);
                 console.log('username: '+user.username);
-                $http.post(BackendCfg.url+'/api/user/authenticate', user )
+                $http.post(BackendCfg.contextPath(location) + '/api/user/authenticate', user )
                     .success(function (response) {
                         callback(response);
                     });
@@ -52,7 +52,7 @@ angular.module('BlurAdmin.theme')
                 console.log('pass: '+user.password);
                 console.log('username: '+user.username);
 
-                $http.post(BackendCfg.url+'/api/user/register', user )
+                $http.post(BackendCfg.contextPath(location) +'/api/user/register', user )
                     .success(function (response) {
                         callback(response);
                     });

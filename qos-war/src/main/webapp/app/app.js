@@ -10,7 +10,7 @@ var BlurAdmin = angular.module('BlurAdmin', [
   'smart-table',
   "xeditable",
   'ui.slimscroll',
-  'ngFileUpload',
+//  'ngFileUpload',
 //  'ngJsTree',
 //  'angular-progress-button-styles',
   'ngCookies',
@@ -36,10 +36,10 @@ BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', '
        // Selected server and bit rate
        $rootScope.bitrateType = $cookieStore.get('bitrateType');
        if ($rootScope.bitrateType == undefined) {
-    	   //default Mb/s
+    	   //default Mbps
 		   $rootScope.bitrateType = {
 				  	id: 1,
-			        name: 'Mb/s',
+			        name: 'Mbps',
 			        href: '',
 			        enable: false,
 			        icon: 'socicon-stackoverflow',
@@ -51,8 +51,8 @@ BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', '
        // init selectedServer
        $rootScope.selectedServer = $cookieStore.get('selectedServer');
        if ($rootScope.selectedServer == undefined) {
-		  // default Mb/s
-		  $rootScope.selectedServer = {serverId : 0, name : "[PE] Hanoi - 1 Gb/s - Bitel", ipAddress: "127.0.0.1", priority: 0, status: "online"};
+		  // default server
+		  $rootScope.selectedServer = {serverId : 0, name : "[PE] Hanoi - 1 Gb/s - Bitel", ipAddress: "127.0.0.1", priority: 0, status: "online", url : "http://localhost:8080/qos"};
        }
        
        $rootScope.isSubmitted = false;
@@ -69,17 +69,19 @@ BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', '
            var restrictedPage = $.inArray($location.path(), ['/login', '/register', '/admin.login', '/adm.register', '/admin', '/app', '/dashboard', '/file', '/speed', '/about', '/setting']) === -1;
            var loggedIn = $rootScope.globals.currentUser;
            $rootScope.currentUser = $rootScope.globals.currentUser;
-           if (restrictedPage && !loggedIn) {
-               if($location.path().indexOf('admin') > -1) {
-                   $location.path('/admin.login');
-               } else if($location.path().indexOf('app') > -1) {
-                   $location.path('/login');
-               } else if($location.path().indexOf('history') > -1) {
-                   $location.path('/login');
-               } else {
-                   $location.path('/home');
-                   }
-               }
+	           		if (restrictedPage && !loggedIn) {
+	//               if($location.path().indexOf('admin') > -1) {
+	//                   $location.path('/admin.login');
+	//               } else if($location.path().indexOf('app') > -1) {
+	//                   $location.path('/login');
+	//               } else
+	       			if($location.path().indexOf('history') > -1) {
+	                   $location.path('/login');
+	                   $scope.$apply();
+	       			} else {
+	                   $location.path('/home');
+	       			}
+           		}
            });
        }
    ]);

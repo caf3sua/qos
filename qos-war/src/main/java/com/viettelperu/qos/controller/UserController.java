@@ -5,25 +5,15 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Date;
 import java.util.HashMap;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
@@ -31,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +35,13 @@ import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
 import com.viettelperu.qos.model.dto.CustomerDTO;
 import com.viettelperu.qos.model.dto.UserDTO;
+import com.viettelperu.qos.model.entity.User;
+import com.viettelperu.qos.service.UserService;
+import com.viettelperu.qos.util.EncryptionUtil;
 import com.viettelperu.qos.ws.QosWebService;
+import com.viettelperu.qos.ws.wsdl.radius.GetMSISDNResponse;
+import com.viettelperu.qos.ws.wsdl.vascm.CheckSubExistsActiveResponse;
+import com.viettelperu.qos.ws.wsdl.vascm.ViewSubscriberByIsdnResponse;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -57,12 +53,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 @Controller
 @RequestMapping("user")
-@PropertySource("classpath:config.properties")
+@PropertySources(@PropertySource("classpath:config.properties"))
 public class UserController extends BaseController {
     private static Logger LOG = LoggerFactory.getLogger(UserController.class);
     
     private static final String USE_DOMAIN = "BiTel";
 
+    private @Autowired UserService userService;
     private @Autowired QosWebService qosWebService;
     
     @Autowired
@@ -79,35 +76,53 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = {JSON_API_CONTENT_HEADER})
     public @ResponseBody APIResponse authenticate(@RequestBody UserDTO userDTO,
                                                   HttpServletRequest request, HttpServletResponse response) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException, AuthenticationFailedException {
-        Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
+    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getEncryptedPassword()), "Encrypted password is blank");
-//        String password = decryptPassword(userDTO);
-        
-//        String wsUsername = env.getProperty("wsUsername");
-//        ComboPooledDataSource dataSource = (ComboPooledDataSource) _applicationContext.getBean("dataSource");
-        
-//        String encrypted = EncryptionUtil.encrypt("12345678");
-//        String decrypted = EncryptionUtil.decrypt(encrypted);
-//        GetMSISDNResponse responseSoap = qosWebService.getMSISDN("nam", "12345678", "127.0.0.1");
-//        System.out.println(responseSoap);
-        
+        String password = EncryptionUtil.decryptPassword(userDTO);
+
         LOG.info("Looking for user by username: " + userDTO.getUsername());
-        //User user = userService.findByUsername(userDTO.getUsername());
+        User user = userService.findByUsername(userDTO.getUsername());
         
         HashMap<String, Object> authResp = new HashMap<>();
-//        if(userService.isValidPass(user, password)) {
-//            LOG.info("User authenticated: "+user.getEmail());
-//            userService.loginUser(user, request);
-        UserDTO user = new UserDTO();
-        user.setUsername("nam");
-        user.setIsdn("0976075335");
-        
-        createAuthResponse(user, authResp);
-//        } else {
-//            throw new AuthenticationFailedException("Invalid username/password combination");
-//        }
+        if(userService.isValidPass(user, password)) {
+            LOG.info("User authenticated: "+user.getEmail());
+            userService.loginUser(user, request);
+            createAuthResponse(user, authResp);
+        } else {
+            throw new AuthenticationFailedException("Invalid username/password combination");
+        }
 
         return APIResponse.toOkResponse(authResp);
+    	
+//    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
+//        Validate.isTrue(StringUtils.isNotBlank(userDTO.getEncryptedPassword()), "Encrypted password is blank");
+////        String password = decryptPassword(userDTO);
+//        
+////        String wsUsername = env.getProperty("wsUsername");
+////        ComboPooledDataSource dataSource = (ComboPooledDataSource) _applicationContext.getBean("dataSource");
+//        
+////        String encrypted = EncryptionUtil.encrypt("12345678");
+////        String decrypted = EncryptionUtil.decrypt(encrypted);
+////        GetMSISDNResponse responseSoap = qosWebService.getMSISDN("nam", "12345678", "127.0.0.1");
+////        System.out.println(responseSoap);
+//        
+//        LOG.info("Looking for user by username: " + userDTO.getUsername());
+//        //User user = userService.findByUsername(userDTO.getUsername());
+//        
+//        HashMap<String, Object> authResp = new HashMap<>();
+////        if(userService.isValidPass(user, password)) {
+////            LOG.info("User authenticated: "+user.getEmail());
+////            userService.loginUser(user, request);
+//        UserDTO user = new UserDTO();
+//        user.setUsername("nam");
+//        user.setIsdn("0976075335");
+//        
+//        createAuthResponse(user, authResp);
+////        } else {
+////            throw new AuthenticationFailedException("Invalid username/password combination");
+////        }
+//
+//        return APIResponse.toOkResponse(authResp);
     }
     
     /**
@@ -119,12 +134,17 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/getMSISDN", method = RequestMethod.POST, headers = {JSON_API_CONTENT_HEADER})
     public @ResponseBody APIResponse getMSISDN(@RequestBody UserDTO userDTO,
-                                                  HttpServletRequest request, HttpServletResponse response) throws AuthenticationFailedException {
+                                                  HttpServletRequest request, HttpServletResponse response) throws Exception {
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getIp()), "Ip Address is blank");
 
         LOG.info("Looking for phone number by IpAddress: " + userDTO.getIp());
-//        GetMSISDNResponse responseSoap = qosWebService.getMSISDN("nam", "12345678", "127.0.0.1");
-//        System.out.println(responseSoap);
+        // Get wsUsername/wsPassword
+//    	String wsUsernameEncrypted = env.getProperty("wsUsername_getMSISDN");
+//    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+//    	String wsPasswordEncrypted = env.getProperty("wsPassword_getMSISDN");
+//    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+    	
+//        GetMSISDNResponse responseSoap = qosWebService.getMSISDN(wsUsername, wsPassword, userDTO.getIp());
         
         // TODO: dump data
         HashMap<String, Object> authResp = new HashMap<>();
@@ -156,11 +176,18 @@ public class UserController extends BaseController {
                                                   HttpServletRequest request, HttpServletResponse response) throws Exception {
     	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
 
-        LOG.info("checkSubExistsActive for user by username: " + userDTO.getUsername());
+        LOG.info("checkSubExistsActive for ISDN: " + userDTO.getIsdn());
         
-        HashMap<String, Object> authResp = new HashMap<>();
+        // Get wsUsername/wsPassword
+    	String wsUsernameEncrypted = env.getProperty("wsUsername_checkSubExistsActive");
+    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+    	String wsPasswordEncrypted = env.getProperty("wsPassword_checkSubExistsActive");
+    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+        
+    	LOG.info("Looking for user by ISDN: " + userDTO.getIsdn());
+    	CheckSubExistsActiveResponse responseSoap = qosWebService.checkSubExistsActive(wsUsername, wsPassword, userDTO.getIsdn());
 
-        return APIResponse.toOkResponse(authResp);
+        return APIResponse.toOkResponse(responseSoap);
     }
     
     /**
@@ -173,21 +200,18 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/viewSubscriberByIsdn", method = RequestMethod.POST, headers = {JSON_API_CONTENT_HEADER})
     public @ResponseBody APIResponse viewSubscriberByIsdn(@RequestBody UserDTO userDTO,
                                                   HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
+    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getIsdn()), "Username/phone is blank");
 
-        LOG.info("Looking for user by username: " + userDTO.getUsername());
+    	// Get wsUsername/wsPassword
+    	String wsUsernameEncrypted = env.getProperty("wsUsername_viewSubscriberByIsdn");
+    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+    	String wsPasswordEncrypted = env.getProperty("wsPassword_viewSubscriberByIsdn");
+    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+    	
+        LOG.info("Looking for user by ISDN: " + userDTO.getIsdn());
+        ViewSubscriberByIsdnResponse responseSoap = qosWebService.viewSubscriberByIsdn(wsUsername, wsPassword, userDTO.getIsdn());
         
-        CustomerDTO customer = new CustomerDTO();
-        customer.setCode("0");
-        customer.setCustId(7079706l);
-        customer.setFirstName("Thinhdd41");
-        customer.setServiceType(1l);
-        customer.setStartDatetime(new Date());
-        customer.setStatus(2l);
-        customer.setTelecomService("M");
-        customer.setIsdn("931999896");
-        
-        return APIResponse.toOkResponse(customer);
+        return APIResponse.toOkResponse(responseSoap);
     }
     
 
@@ -201,16 +225,42 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/register", method = RequestMethod.POST, headers = {JSON_API_CONTENT_HEADER})
     public @ResponseBody APIResponse register(@RequestBody UserDTO userDTO,
                                               HttpServletRequest request) throws NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        Validate.isTrue(StringUtils.isNotBlank(userDTO.getEmail()), "Email is blank");
+    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getEmail()), "Email is blank");
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getEncryptedPassword()), "Encrypted password is blank");
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "User name is blank");
-        String password = decryptPassword(userDTO);
+        String password = EncryptionUtil.decryptPassword(userDTO);
 
-        LOG.info("register for user by email: "+userDTO.getEmail());
-        
-        return APIResponse.toErrorResponse("This function is not available now");
+        LOG.info("Looking for user by email: "+userDTO.getEmail());
+        if(userService.isEmailExists(userDTO.getEmail())) {
+            return APIResponse.toErrorResponse("Email is taken");
+        }
+
+        LOG.info("Creating user: "+userDTO.getEmail());
+        User user = new User();
+        user.setEmail(userDTO.getEmail());
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(password);
+        user.setEnabled(true);
+        user.setRole(User.Role.USER);
+        userService.registerUser(user, request);
+
+        HashMap<String, Object> authResp = new HashMap<>();
+        createAuthResponse(user, authResp);
+
+        return APIResponse.toOkResponse(authResp);
+//        return APIResponse.toErrorResponse("This function is not available now");
     }
 
+    private void createAuthResponse(User user, HashMap<String, Object> authResp) {
+        String token = Jwts.builder()
+        		.setSubject(user.getUsername())
+                .claim("role", USE_DOMAIN)
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, JWTTokenAuthFilter.JWT_KEY).compact();
+        authResp.put("token", token);
+        authResp.put("user", user);
+    }
+    
     private void createAuthResponse(UserDTO user, HashMap<String, Object> authResp) {
         String token = Jwts.builder()
         		.setSubject(user.getUsername())
@@ -232,52 +282,7 @@ public class UserController extends BaseController {
         return APIResponse.toOkResponse("success");
     }
 
-    @RequestMapping(value = "/getLocation/{username}", method = RequestMethod.GET)
-    public @ResponseBody
-    APIResponse getLocation(@PathVariable String username) throws Exception {
-        return APIResponse.toOkResponse("success");
-    }
-    
-    private String decryptPassword(UserDTO userDTO) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
-        String passPhrase = "biZndDtCMkdeP8K0V15OKMKnSi85";
-        String salt = userDTO.getSalt();
-        String iv = userDTO.getIv();
-        int iterationCount = userDTO.getIterations();
-        int keySize = userDTO.getKeySize();
-
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), hex(salt), iterationCount, keySize);
-        SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
-
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(hex(iv)));
-        byte[] decrypted = cipher.doFinal(base64(userDTO.getEncryptedPassword()));
-
-        return new String(decrypted, "UTF-8");
-    }
-
-    private String base64(byte[] bytes) {
-        return Base64.encodeBase64String(bytes);
-    }
-
-    private byte[] base64(String str) {
-        return Base64.decodeBase64(str);
-    }
-
-    private String hex(byte[] bytes) {
-        return Hex.encodeHexString(bytes);
-    }
-
-    private byte[] hex(String str) {
-        try {
-            return Hex.decodeHex(str.toCharArray());
-        }
-        catch (DecoderException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-	public QosWebService getQosWebService() {
+    public QosWebService getQosWebService() {
 		return qosWebService;
 	}
 

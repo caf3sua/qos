@@ -37,7 +37,8 @@ public class SpeedTestHistoryDTO {
 	String networkTechnology;
 	String cid;
 	String lac;
-	String signalStrength;
+	String signalStrengthUnit;
+	Double signalStrength;
 	// Extend
 	String ipsCountryCode;
 	String serverCountryCode;
@@ -266,14 +267,6 @@ public class SpeedTestHistoryDTO {
 		this.networkTechnology = networkTechnology;
 	}
 
-	public String getSignalStrength() {
-		return signalStrength;
-	}
-
-	public void setSignalStrength(String signalStrength) {
-		this.signalStrength = signalStrength;
-	}
-
 	public String getIpsCountryCode() {
 		return ipsCountryCode;
 	}
@@ -288,6 +281,34 @@ public class SpeedTestHistoryDTO {
 
 	public void setServerCountryCode(String serverCountryCode) {
 		this.serverCountryCode = serverCountryCode;
+	}
+
+	/**
+	 * @return the signalStrengthUnit
+	 */
+	public String getSignalStrengthUnit() {
+		return signalStrengthUnit;
+	}
+
+	/**
+	 * @param signalStrengthUnit the signalStrengthUnit to set
+	 */
+	public void setSignalStrengthUnit(String signalStrengthUnit) {
+		this.signalStrengthUnit = signalStrengthUnit;
+	}
+
+	/**
+	 * @return the signalStrength
+	 */
+	public Double getSignalStrength() {
+		return signalStrength;
+	}
+
+	/**
+	 * @param signalStrength the signalStrength to set
+	 */
+	public void setSignalStrength(Double signalStrength) {
+		this.signalStrength = signalStrength;
 	}
 
 	@Override

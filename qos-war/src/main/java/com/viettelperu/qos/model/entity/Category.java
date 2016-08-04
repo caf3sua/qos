@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * @author Nam, Nguyen Hoai <namnh@itsol.vn>
  */
 @Entity
-@Table(indexes = {  @Index(name="name_idx", columnList = "name", unique = true),
+@Table(name = "QOS_CATEGORY", indexes = {  @Index(name="name_idx", columnList = "name", unique = true),
         @Index(name="priority_idx", columnList = "priority"),
         @Index(name="parentCategory_idx", columnList = "parent_category")})
 public class Category extends JPAEntity<Long> {

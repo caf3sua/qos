@@ -14,7 +14,7 @@ import java.util.Date;
  * @author Nam, Nguyen Hoai <namnh@itsol.vn>
  */
 @Entity
-@Table(indexes = {  @Index(name="name_idx", columnList = "name", unique = true),
+@Table(name = "QOS_JOB", indexes = {  @Index(name="name_idx", columnList = "name", unique = true),
         @Index(name="status_idx", columnList = "status"),
         @Index(name="category_idx", columnList = "category")})
 public class Job extends JPAEntity<Long> {

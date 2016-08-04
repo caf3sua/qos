@@ -52,7 +52,7 @@ public class SpeedTestHistoryController extends BaseController {
     	Validate.notNull(dto, "SpeedTestHistoryDTO is null");
     	
     	SpeedTestHistory history = new SpeedTestHistory();
-    	covertDTOintoEntity(dto, history);
+    	convertDTOintoEntity(dto, history);
     	
     	// Insert to database
     	SpeedTestHistory result = speedTestHistoryService.insert(history);
@@ -139,7 +139,7 @@ public class SpeedTestHistoryController extends BaseController {
      * @param dto
      * @param entity
      */
-    private void covertDTOintoEntity(SpeedTestHistoryDTO dto, SpeedTestHistory entity) {
+    private void convertDTOintoEntity(SpeedTestHistoryDTO dto, SpeedTestHistory entity) {
     	entity.setApplicationType(ApplicationType.valueOf(dto.getApplicationType()));
     	entity.setServerName(dto.getServerName());
     	entity.setIps(dto.getIps());
@@ -167,7 +167,8 @@ public class SpeedTestHistoryController extends BaseController {
     	entity.setNetworkTechnology(NetworkTechnology.valueOf(dto.getNetworkTechnology()));
     	entity.setCid(dto.getCid());
     	entity.setLac(dto.getLac());
-    	entity.setSignalStrength(SignalStrength.valueOf(dto.getSignalStrength()));
+    	entity.setSignalStrengthUnit(SignalStrength.valueOf(dto.getSignalStrengthUnit()));
+    	entity.setSignalStrength(dto.getSignalStrength());
     	// Extend
     	entity.setIpsCountryCode(dto.getIpsCountryCode());
     	entity.setServerCountryCode(dto.getServerCountryCode());

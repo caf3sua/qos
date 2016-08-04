@@ -9,7 +9,7 @@
     .controller('BaSidebarCtrl', BaSidebarCtrl);
 
   /** @ngInject */
-  function BaSidebarCtrl($scope, baSidebarService) {
+  function BaSidebarCtrl($rootScope, $scope, baSidebarService) {
 
     $scope.menuItems = baSidebarService.getMenuItems();
     $scope.defaultSidebarState = $scope.menuItems[0].stateRef;
@@ -20,6 +20,15 @@
       var menuTopValue = 66;
       $scope.hoverElemTop = $event.currentTarget.getBoundingClientRect().top - menuTopValue;
     };
+    
+    $scope.isShowItemMenu = function (item) {
+        // Check login with history
+    	if (item.name == 'history' && !$rootScope.globals.currentUser) {
+    		return false;
+    	}
+    	
+    	return true;
+      };
 
     $scope.$on('$stateChangeSuccess', function () {
       if (baSidebarService.canSidebarBeHidden()) {

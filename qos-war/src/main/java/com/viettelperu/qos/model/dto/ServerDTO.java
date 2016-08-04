@@ -13,8 +13,9 @@ public class ServerDTO {
     String description;
     String status;
     String countryCode;
+    String url;
 
-	public ServerDTO(Long serverId, String name, String ipAddress, Integer priority, String status, String countryCode) {
+	public ServerDTO(Long serverId, String name, String ipAddress, Integer priority, String status, String countryCode, String url) {
 		super();
 		this.serverId = serverId;
 		this.name = name;
@@ -22,6 +23,7 @@ public class ServerDTO {
 		this.priority = priority;
 		this.status = status;
 		this.countryCode = countryCode;
+		this.url = url;
 	}
     
     public ServerDTO(Long serverId, String name, String ipAddress, String description) {
@@ -138,5 +140,19 @@ public class ServerDTO {
 
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

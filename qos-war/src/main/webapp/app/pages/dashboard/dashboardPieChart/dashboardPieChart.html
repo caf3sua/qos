@@ -3,11 +3,16 @@
     <div ba-panel>
       <div class="pie-chart-item">
         <div ng-show="!chart.loading">
+            <!-- 
             <div class="chart" rel="{{ ::chart.color }}" data-percent="60"> <span class="percent"></span> </div>
+             -->
+             <div class="chart">
+                <img ng-src="assets/img/icon/{{ ::chart.panel_icon}}" >
+             </div>
 	        <div class="description">
 	          <div>{{ ::chart.description }}</div>
 	          <div style="font-size: 14px;margin-top: 5px;">
-	                <span>Average: {{ chart.average }} {{ chart.unit }}</span>
+	                <span>Avg: {{ chart.average }} {{ chart.unit }}</span>
 	          </div>
 	          <div class="description-stats">{{ chart.stats }} {{ chart.unit }} </div>
 	        </div>
@@ -24,26 +29,34 @@
   <div class="pie-chart-item-container">
     <div ba-panel>
       <div class="pie-chart-item">
-      	<div class="chart-title"> 
-      	</div>
-        <div class="description qos-description">
-        	<table class="description-item-info">
-        		<tr>
-        			<td class="item-title">ISP</td><td class="item-value">{{geoLocation.isp}}</td>
-        		</tr>
-        		<tr>
-        			<td>IPv4</td><td class="item-value">{{geoLocation.query}}</td>
-        		</tr>
-        		<tr>
-        			<td>Browser</td><td class="item-value"><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} (version: {{data.browser_version}})</div></td>
-        		</tr>
-        	</table>
-        	
-        	<a href ng-click="openInfoModal()" class="pull-left" id="more-info-link">
-	        	<i class="fa fa-info-circle" aria-hidden="true"></i>  More information
-	        </a>
-        </div>
-        <i class="chart-icon i-cloud_server"></i>
+        <table>
+            <tr>
+                <td>
+                    <div class="chart-title"> 
+                    </div>
+                </td>
+                <td>
+                    <div class="description qos-description">
+			            <table class="description-item-info">
+			                <tr>
+			                    <td class="item-title">ISP</td><td class="item-value">{{geoLocation.isp}}</td>
+			                </tr>
+			                <tr>
+			                    <td>IPv4</td><td class="item-value">{{geoLocation.query}}</td>
+			                </tr>
+			                <tr>
+			                    <td>Browser</td><td class="item-value"><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} (version: {{data.browser_version}})</div></td>
+			                </tr>
+			            </table>
+			            
+			            <a href ng-click="openInfoModal()" class="pull-left" id="more-info-link">
+			                <i class="fa fa-info-circle" aria-hidden="true"></i>  More information
+			            </a>
+			        </div>
+			        <i class="chart-icon i-cloud_server"></i>
+                </td>
+            </tr>
+        </table>
       </div>
     </div>
   </div>

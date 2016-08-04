@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2016 Bitel Peru and/or its affiliates. All rights reserved.
+ */
 package com.viettelperu.qos.ws.wsdl.client;
 import java.text.SimpleDateFormat;
 
@@ -12,6 +15,12 @@ import com.viettelperu.qos.ws.wsdl.weather.GetCityForecastByZIP;
 import com.viettelperu.qos.ws.wsdl.weather.GetCityForecastByZIPResponse;
 import com.viettelperu.qos.ws.wsdl.weather.Temp;
 
+/**
+ * Using for testing
+ * @author Nam, Nguyen Hoai <namnh@itsol.vn>
+ *
+ */
+@Deprecated
 public class WeatherClient extends WebServiceGatewaySupport {
 
 	private static final Logger log = LoggerFactory.getLogger(WeatherClient.class);

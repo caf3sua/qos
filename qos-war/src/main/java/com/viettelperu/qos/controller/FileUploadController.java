@@ -131,12 +131,18 @@ public class FileUploadController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "content-type=multipart/*")
+    @RequestMapping(value = "/upload", method = {RequestMethod.POST, RequestMethod.GET}, headers = "content-type=multipart/*")
     public @ResponseBody
     ResponseEntity uploadFile(MultipartHttpServletRequest request) throws Exception {
+        // Get client's origin
+        String clientOrigin = request.getHeader("origin");
+        
     	// Generate the http headers with the file properties
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Origin", "*");
+        headers.add("Access-Control-Allow-Credentials", "true");
+        headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+        headers.add("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token, Accept");
         
     	FileUpload fileUpload = null;
     	try {
@@ -148,7 +154,7 @@ public class FileUploadController extends BaseController {
                 String mimeType = file.getContentType();
                 String filename = file.getOriginalFilename();
                 byte[] bytes = file.getBytes();
-                FileUpload newFile = new FileUpload(filename, null, mimeType);
+                fileUpload = new FileUpload(filename, null, mimeType);
 
                 // Save file
                 String realPathtoUploads =  request.getServletContext().getRealPath(UPLOADS_DIR);

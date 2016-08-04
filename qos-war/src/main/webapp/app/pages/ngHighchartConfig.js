@@ -3,6 +3,9 @@
  * http://jsfiddle.net/76dLm8h7/3/
  * http://jsfiddle.net/fwxbfu1u/6/
  * http://jsfiddle.net/jNc8E/
+ * 
+ * http://jsfiddle.net/r8d3jnx6/1/ -> custom label
+ * http://jsfiddle.net/xhfgzfps/1/
  */
 var GRAPH_HEIGHT = 200;
 var COLOR_DOWNLOAD = '#6AA4D9';
@@ -10,121 +13,117 @@ var COLOR_UPLOAD = '#ED7D31';
 var COLOR_LATENCY = '#A5A5A5';
 
 var speedConfig = {
-	options: {
-        chart: {
-            type: 'gauge',
-            plotBackgroundColor: null,
-            plotBackgroundImage: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            animation: {
-                duration: 500,
-                easing: 'easeOutBounce'
-            }
-        },
-        title: {
-            text: 'Speedometer'
-        },
-        pane: {
-            startAngle: -150,
-            endAngle: 150,
-            background: [{
-                backgroundColor: {
-                    linearGradient: {
-                        x1: 0,
-                        y1: 0,
-                        x2: 0,
-                        y2: 1
-                    },
-                    stops: [
-                        [0, '#FFF'],
-                        [1, '#333']
-                    ]
-                },
-                borderWidth: 0,
-                outerRadius: '109%'
-            }, {
-                backgroundColor: {
-                    linearGradient: {
-                        x1: 0,
-                        y1: 0,
-                        x2: 0,
-                        y2: 1
-                    },
-                    stops: [
-                        [0, '#333'],
-                        [1, '#FFF']
-                    ]
-                },
-                borderWidth: 1,
-                outerRadius: '107%'
-            }, {
-                // default background
-            }, {
-                backgroundColor: '#DDD',
-                borderWidth: 0,
-                outerRadius: '105%',
-                innerRadius: '103%'
-            }]
-        },
-        credits: false
-    },
-    yAxis: {
-        min: 0,
-        max: 100,
-        
-        minorTickInterval: 'auto',
-        minorTickWidth: 1,
-        minorTickLength: 10,
-        minorTickPosition: 'inside',
-        //minorTickColor: '#666',
-        minorTickColor: '#c4c4c4',
+		options: {
+	        chart: {
+	            type: 'gauge',
+	            plotBackgroundColor: null,
+	            plotBackgroundImage: null,
+	            plotBorderWidth: 0,
+	            plotShadow: false,
+	            animation: {
+	                duration: 500,
+	                easing: 'easeOutBounce'
+	            },
+	        },
+	        title: {
+	            text: 'Speedometer'
+	        },
+	        pane: {
+	            startAngle: -150,
+	            endAngle: 150,
+	            background: null, 
+	        },
+//	        tooltip: {
+//                shared: true,
+//                formatter: function(){
+//                    return 'aaaa';
+//                },
+//                useHtml: true
+//            },
+	        credits: false
+	    },
+	    yAxis: {
+	        min: 0,
+	        max: 100,
+	        
+	        minorTickInterval: 'auto',
+	        minorTickWidth: 1,
+	        minorTickLength: 10,
+	        minorTickPosition: 'inside',
+	        //minorTickColor: '#666',
+	        minorTickColor: '#c4c4c4',
 
-        tickPixelInterval: 30,
-        tickWidth: 2,
-        tickPosition: 'inside',
-        tickLength: 10,
-        //tickColor: '#666',
-        tickColor: '#c4c4c4',
-        labels: {
-            step: 2,
-            rotation: 'auto'
-        },
-        title: {
-            text: 'Mb/s'
-        },
-        plotBands: [{
-            from: 0,
-            to: 40,
-            //color: '#55BF3B' // green
-            color: '#c4c4c4'
-        }, {
-            from: 40,
-            to: 80,
-            //color: '#DDDF0D' // yellow
-            color: '#c4c4c4'
-        }, {
-            from: 80,
-            to: 100,
-            //color: '#DF5353' // red
-            color: '#c4c4c4'
-        }]        
-    },
+	        tickPixelInterval: 30,
+	        tickWidth: 2,
+	        tickPosition: 'inside',
+	        tickLength: 15,
+	        //tickColor: '#666',
+	        tickColor: '#c4c4c4',
+	        labels: {
+	            step: 2,
+	            rotation: 'auto',
+	            //distance: 10,
+	        },
+	        title: {
+	            text: 'Mbps'
+	        },
+	        plotBands: [{
+	            from: 0,
+	            to: 40,
+	            //color: '#55BF3B' // green
+	            color: '#c4c4c4'
+	        }, {
+	            from: 40,
+	            to: 80,
+	            //color: '#DDDF0D' // yellow
+	            color: '#c4c4c4'
+	        }, {
+	            from: 80,
+	            to: 100,
+	            //color: '#DF5353' // red
+	            color: '#c4c4c4'
+	        }]        
+	    },
 
-    series: [{
-        name: 'Speed',
-        data: [0],
-        tooltip: {
-            valueSuffix: ' Mb/s'
-        },
-        dial: {
-            backgroundColor : '#c4c4c4'
-        },
-        pivot: {
-            backgroundColor: '#c4c4c4'
-        }
-    }],
-};
+	    series: [{
+	        name: 'Speed',
+	        data: [0],
+	        dataLabels: {
+//                borderRadius: 5,
+//                backgroundColor: "rgba(244,109,67, 0.7)",
+//                borderWidth: 1,
+                borderColor: null,
+//                style: {
+//                    fontSize: "30px"
+//                },
+//                color: "white",
+//                crop: false,
+//                overflow: "none",
+                formatter: function () {
+                	var s = "";
+                	if (this.point.y != undefined) {
+                		s = Highcharts.numberFormat(this.point.y,2);
+                	}
+                    return s;
+                },
+//                y: -65,
+//                zIndex: 10
+            },
+//	        tooltip: {
+//	        	useHTML: true,
+//	        	pointFormat : 'Speed test',
+//                shared: true
+//	        },
+	        dial: {
+	            backgroundColor : '#c4c4c4'
+	        	//backgroundColor : 'black'
+	        },
+	        pivot: {
+	            backgroundColor: '#c4c4c4'
+	        	//backgroundColor: 'black'
+	        }
+	    }],
+	};
 
 var graphConfig = {
     options: {
@@ -135,7 +134,14 @@ var graphConfig = {
         	width: null,
         	height: GRAPH_HEIGHT
         },
-        credits: false
+        credits: false,
+//        tooltip: {
+//            shared: true,
+//            formatter: function(){
+//                return 'aaaa';
+//            },
+//            useHtml: true
+//        },
     },
     series: [{
     	name: 'Download',
@@ -143,24 +149,48 @@ var graphConfig = {
         marker: {
             enabled: false
         },
-        color: '#3747F0'
+        color: '#3747F0',
+        tooltip: {
+//        	headerFormat: '<b>{series.name}</b><br>',
+//            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+        	useHTML: true,
+        	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
+            shared: true
+        },
     },
     {
     	name: 'Upload',
         data: [],
         marker: {
             enabled: false
-        }
+        },
+        tooltip: {
+//        	headerFormat: '<b>{series.name}</b><br>',
+//            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+        	useHTML: true,
+        	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
+            shared: true
+        },
     }],
     title: {
         text: 'Bandwidth'
     },
     xAxis: {
         type: 'datetime',
+        labels: {
+            enabled:false
+        }
+//	    dateTimeLabelFormats: { // don't display the dummy year
+//	        month: '%e. %b',
+//	        year: '%b'
+//	    },
+//	    title: {
+//	        text: 'Date'
+//	    }
     },
     yAxis: {
         title: {
-            text: 'Mb/s'
+            text: 'Mbps'
         },
 //        min: 1,
 //    	max: 100,
@@ -236,7 +266,7 @@ var graphHistoryConfig = {
                 },
                 labels: {
                     formatter: function () {
-                        return this.value + ' Mb/s';
+                        return this.value + ' Mbps';
                     },
                     style: {
                         color: '#4572A7'
@@ -264,6 +294,7 @@ var graphHistoryConfig = {
             tooltip: {
                 shared: true
             },
+            credits: false
         },
         series: [
 		{
@@ -282,7 +313,7 @@ var graphHistoryConfig = {
 		    type: 'line',
 		    data: [],
 		    tooltip: {
-		        valueSuffix: ' Mb/s'
+		        valueSuffix: ' Mbps'
 		    }
 		
 		}, {
@@ -291,7 +322,7 @@ var graphHistoryConfig = {
             type: 'line',
             data: [],
             tooltip: {
-                valueSuffix: ' Mb/s'
+                valueSuffix: ' Mbps'
             }
 
         }]

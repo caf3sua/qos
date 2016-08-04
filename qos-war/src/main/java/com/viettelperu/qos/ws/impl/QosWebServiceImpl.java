@@ -32,7 +32,7 @@ public class QosWebServiceImpl implements QosWebService {
 		vasCmClient = new VasCmClient();
 	}
 	
-    public void test() {
+    public void hello() {
     	System.out.println("QosWebServiceImpl test");
     }
 

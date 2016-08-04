@@ -7,7 +7,7 @@ import com.viettelperu.qos.ws.wsdl.weather.GetCityForecastByZIPResponse;
 
 public interface QosWebService {
 
-    public void test();
+    public void hello();
     
     public GetCityForecastByZIPResponse getCityForecastByZip(String zipCode);
     

@@ -18,6 +18,7 @@ import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
 import com.viettelperu.qos.model.dto.ServerDTO;
 import com.viettelperu.qos.service.CategoryService;
+import com.viettelperu.qos.service.ServerService;
 
 /**
  * Server creation and get APIs
@@ -30,7 +31,7 @@ public class ServerController extends BaseController {
     private static Logger LOG = LoggerFactory.getLogger(ServerController.class);
 
     @Autowired
-    private CategoryService categoryService;
+    private ServerService serverService;
 
     /**
      * Method to get the sub categories for a parent category by given name
@@ -44,15 +45,23 @@ public class ServerController extends BaseController {
     public @ResponseBody
     APIResponse getAllServerInfo() throws Exception {
         //Category category = categoryService.findByCategoryName(parentCatName);
+    	//List<Server> serverInfos = serverService.findAll();
         List<ServerDTO> serverInfos = new ArrayList<>();
-        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "127.0.0.1", 0, "online", "VN");
-        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.70.74.174", 1, "online", "VN");
-        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3", 2, "online", "PE");
-        ServerDTO s4 = new ServerDTO(3l, "[PE] London - 1 Gb/s - Bitel", "192.168.1.4", 3, "offline", "GB");
+        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "localhost"
+        		, 0, "online", "VN", "http://localhost:8080/qos");
+        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.71.224.225"
+        		, 1, "online", "VN", "http://118.71.224.225:8080/qos");
+        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3"
+        		, 2, "online", "PE", "http://192.168.1.3");
+        ServerDTO s4 = new ServerDTO(3l, "[PE] London - 1 Gb/s - Bitel", "192.168.1.4"
+        		, 3, "offline", "GB", "http://192.168.1.4");
+        ServerDTO s5 = new ServerDTO(4l, "[PE] TPBank - 1 Gb/s", "103.232.56.17"
+        		, 4, "online", "PE", "http://103.232.56.17:8080/qos");
         serverInfos.add(s1);
         serverInfos.add(s2);
         serverInfos.add(s3);
         serverInfos.add(s4);
+        serverInfos.add(s5);
 
         return APIResponse.toOkResponse(serverInfos);
     }

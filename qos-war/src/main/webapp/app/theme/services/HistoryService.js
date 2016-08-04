@@ -61,7 +61,7 @@ angular.module('BlurAdmin.theme')
 
                 console.log('create history for username: ' + user.username);
 
-                $http.post(BackendCfg.url+'/api/history/create', history )
+                $http.post(BackendCfg.contextPath(location) + '/api/history/create', history )
                     .success(function (response) {
                         callback(response);
                     });

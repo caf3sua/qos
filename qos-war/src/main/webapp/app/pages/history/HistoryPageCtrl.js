@@ -45,7 +45,7 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
       .controller('HistoryPageCtrl', HistoryPageCtrl);
 
   /** @ngInject */
-  function HistoryPageCtrl($scope, $filter, $timeout, $uibModal, toastr, toastrConfig, CommonService) {
+  function HistoryPageCtrl($rootScope, $scope, $location, $filter, $timeout, $uibModal, toastr, toastrConfig, CommonService) {
 	  	var his = this;
 	  	
 	  	$scope.dataTablePageSize = 10;
@@ -143,6 +143,11 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
     		$scope.graphHistoryConfig.series[1].data = [];
     		$scope.graphHistoryConfig.series[2].data = [];
     		
+    		// Check user login
+    		if (!$rootScope.globals.currentUser) {
+    			return;
+    		}
+    		
 	    	// call server to get history data
 	    	CommonService.getHistory(function (result) {
 	    		var data = result.data;
@@ -163,6 +168,11 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    				$scope.graphHistoryConfig.options.xAxis[0].categories.push(date);
 					}
 	    		} else if (data.code == 404) {
+	    			$scope.graphHistoryConfig.series[0].data = [];
+	        		$scope.graphHistoryConfig.series[1].data = [];
+	        		$scope.graphHistoryConfig.series[2].data = [];
+	        		$scope.dataTable = [];
+	        	  	$scope.dataTableInit = [];
 	    			// Toast error
 	    			$scope.openToast('error-search-warning');
 	    		} else {

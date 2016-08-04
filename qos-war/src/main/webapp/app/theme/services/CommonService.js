@@ -5,8 +5,8 @@
 
 'use strict';
 angular.module('BlurAdmin.theme')
-    .service('CommonService', ['$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg', 'AppUtil', 'Upload',
-        function ($http, $cookieStore, $rootScope, $timeout, BackendCfg, AppUtil, Upload) {
+    .service('CommonService', ['$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg', 'AppUtil',
+        function ($http, $cookieStore, $rootScope, $timeout, BackendCfg, AppUtil) {
             var service = this;
             
             service.getLocation = function (callback) {
@@ -31,7 +31,7 @@ angular.module('BlurAdmin.theme')
 //        		delete $http.defaults.headers.common.Authorization;
                 
         		console.log("getServerInfo");
-        		$http.get(BackendCfg.url+'/api/server/getAllServerInfo').then(function(result) {
+        		$http.get(BackendCfg.contextPath(location) + '/api/server/getAllServerInfo').then(function(result) {
         			console.log(result);
         			console.log(result.data.result);
         			callback(result.data.result);
@@ -49,12 +49,29 @@ angular.module('BlurAdmin.theme')
                 var start = (new Date()).getTime();
                 
         		console.log("Ping url:" + URL);
-        		$http.get(URL + '?rnd=' + (new Date().getTime())).then(function(result) {
-        			responseTime = (new Date().getTime()) - start;
+//        		$http.get(URL + '?rnd=' + (new Date().getTime())).then(function(result) {
+//        			responseTime = (new Date().getTime()) - start;
+//        			// ping : router from source -> destination
+//        			responseTime = parseInt(responseTime / 2);
+//        			callback(responseTime);
+//        		}, function(e) {
+//        			responseTime = -1;
+//        			callback(responseTime);
+//        			console.log("error when ping");
+//        		});
+        		
+        		$.getJSON(URL + '?rnd=' + (new Date().getTime()))
+    		  	.done(function( result ) {
+    		  		responseTime = (new Date().getTime()) - start;
+        			// ping : router from source -> destination
+        			responseTime = parseInt(responseTime / 2);
         			callback(responseTime);
-        		}, function(e) {
-        			console.log("error");
-        		});
+    		  	})
+    		  	.fail(function( jqxhr, textStatus, error ) {
+    		  		responseTime = -1;
+        			callback(responseTime);
+        			console.log("error when ping");
+    		  	});
             }; 
             
             service.createHistory = function (data, callback) {
@@ -83,29 +100,44 @@ angular.module('BlurAdmin.theme')
                 history.province = null;
                 history.district = null;
                 history.address = null;
-                history.downloadSpeed = AppUtil.average(downloadData, 2);
-                history.maxDownloadSpeed = AppUtil.max(downloadData);
-                history.uploadSpeed = AppUtil.average(uploadData, 2);
-                history.maxUploadSpeed = AppUtil.max(uploadData);
+                if (data.unitType == 0) {
+                	history.downloadSpeed = AppUtil.averagePoint(downloadData, 2);
+                	history.downloadSpeed = (history.downloadSpeed / MBPS_TO_KBPS).toFixed(2);
+                	
+                    history.maxDownloadSpeed = AppUtil.maxPoint(downloadData);
+                    history.maxDownloadSpeed = (history.maxDownloadSpeed / MBPS_TO_KBPS).toFixed(2);
+                    
+                    history.uploadSpeed = AppUtil.averagePoint(uploadData, 2);
+                    history.uploadSpeed = (history.uploadSpeed / MBPS_TO_KBPS).toFixed(2);
+                    
+                    history.maxUploadSpeed = AppUtil.maxPoint(uploadData);
+                    history.maxUploadSpeed = (history.maxUploadSpeed / MBPS_TO_KBPS).toFixed(2);
+                } else {
+                	history.downloadSpeed = AppUtil.averagePoint(downloadData, 2);
+                    history.maxDownloadSpeed = AppUtil.maxPoint(downloadData);
+                    history.uploadSpeed = AppUtil.averagePoint(uploadData, 2);
+                    history.maxUploadSpeed = AppUtil.maxPoint(uploadData);
+                }
                 // TODO
-                history.packageLoss = 10;
+                history.packageLoss = 0;
                 history.latency = AppUtil.average(latencyData, 0);
                 history.minLatency = AppUtil.min(latencyData);
-                // TODO
-                history.variationLatency = 20;
+                var maxLatency = AppUtil.max(latencyData);
+                history.variationLatency = maxLatency - history.minLatency;
                 history.latitudes = geoLocation.lat;
                 history.longitudes = geoLocation.lon;
                 history.mcc = null;
                 history.mnc = null;
-                history.networkTechnology = "LTE";
+                history.networkTechnology = "WWAN";
                 history.cid = null;
                 history.lac = null;
-                history.signalStrength = "dB";
+                history.signalStrengthUnit = "dB";
+                history.signalStrength = null;
                 // Extend
                 history.ipsCountryCode = geoLocation.countryCode;
                 history.serverCountryCode = selectedServer.countryCode;
 
-                $http.post(BackendCfg.url+'/api/history/create', history ).then(function(result) {
+                $http.post(BackendCfg.contextPath(location) + '/api/history/create', history ).then(function(result) {
         			callback(result);
         		}, function(e) {
         			console.log("error");
@@ -116,7 +148,7 @@ angular.module('BlurAdmin.theme')
 //            	BackendCfg.setupHttp($http);
         		
         		console.log("Delete" + URL);
-        		$http.delete(BackendCfg.url+'/api/history/delete/' + id).then(function(result) {
+        		$http.delete(BackendCfg.contextPath(location) + '/api/history/delete/' + id).then(function(result) {
         			callback(result);
         		}, function(e) {
         			console.log("error");
@@ -129,11 +161,17 @@ angular.module('BlurAdmin.theme')
                 var user = $rootScope.globals.currentUser;
                 console.log('get history for username: ' + user.username);
 
-                $http.get(BackendCfg.url+'/api/history/getByUsername/' + user.username).then(function(result) {
+                $http.get(BackendCfg.contextPath(location) + '/api/history/getByUsername/' + user.username).then(function(result) {
         			callback(result);
         		}, function(e) {
         			console.log("error");
         		});
+            };
+            
+            service.getContextPath = function () {
+            	var contextPath = $location.absUrl();
+            	contextPath = redirectUri.substr(0, redirectUri.indexOf('#'));
+            	return contextPath;
             };
             
             return service;

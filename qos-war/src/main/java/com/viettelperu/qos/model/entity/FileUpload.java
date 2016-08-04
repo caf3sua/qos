@@ -17,7 +17,7 @@ import com.viettelperu.qos.framework.data.JPAEntity;
  * @author Nam, Nguyen Hoai <namnh@itsol.vn>
  */
 @Entity
-@Table(indexes = {  @Index(name="filename_idx", columnList = "filename", unique = true)})
+@Table(name = "QOS_FILEUPLOAD", indexes = {  @Index(name="filename_idx", columnList = "filename", unique = true)})
 public class FileUpload extends JPAEntity<Long> {
 
 	public FileUpload() {

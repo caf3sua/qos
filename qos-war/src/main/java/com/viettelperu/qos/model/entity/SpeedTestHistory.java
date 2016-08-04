@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import javax.validation.constraints.Null;
 
 import com.viettelperu.qos.framework.data.JPAEntity;
 
@@ -16,7 +15,7 @@ import com.viettelperu.qos.framework.data.JPAEntity;
  * @author Nam, Nguyen Hoai <namnh@itsol.vn>
  */
 @Entity
-@Table(indexes = {  @Index(name="userName_idx", columnList = "user_name"),
+@Table(name = "QOS_SPEEDTESTHISTORY", indexes = {  @Index(name="userName_idx", columnList = "user_name"),
         @Index(name="serverName_idx", columnList = "server_name")})
 public class SpeedTestHistory extends JPAEntity<Long> {
 	public enum ApplicationType {
@@ -28,7 +27,9 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	
 	public enum NetworkTechnology {
 		UMTS,
-		LTE
+		LTE,
+		WIFI,
+		WWAN
     }
 
 	public enum SignalStrength {
@@ -69,7 +70,8 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	private String cid;
 	/** LAC - Location Area Code is a unique number of current location area. A location area is a set of base stations that are grouped together to optimize signalling. */
 	private String lac;
-	private SignalStrength signalStrength;
+	private SignalStrength signalStrengthUnit;
+	private Double signalStrength;
 	// Extend
 	private String ipsCountryCode;
 	private String serverCountryCode;
@@ -317,14 +319,6 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 		this.lac = lac;
 	}
 
-    @Column
-	public SignalStrength getSignalStrength() {
-		return signalStrength;
-	}
-
-	public void setSignalStrength(SignalStrength signalStrength) {
-		this.signalStrength = signalStrength;
-	}
 
     @Override
     public String toString() {
@@ -350,5 +344,35 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 
 	public void setServerCountryCode(String serverCountryCode) {
 		this.serverCountryCode = serverCountryCode;
+	}
+
+	/**
+	 * @return the signalStrengthUnit
+	 */
+	@Column
+	public SignalStrength getSignalStrengthUnit() {
+		return signalStrengthUnit;
+	}
+
+	/**
+	 * @param signalStrengthUnit the signalStrengthUnit to set
+	 */
+	public void setSignalStrengthUnit(SignalStrength signalStrengthUnit) {
+		this.signalStrengthUnit = signalStrengthUnit;
+	}
+
+	/**
+	 * @return the signalStrength
+	 */
+	@Column
+	public Double getSignalStrength() {
+		return signalStrength;
+	}
+
+	/**
+	 * @param signalStrength the signalStrength to set
+	 */
+	public void setSignalStrength(Double signalStrength) {
+		this.signalStrength = signalStrength;
 	}
 }

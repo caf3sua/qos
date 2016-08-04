@@ -162,6 +162,12 @@
             <version>${mysql.version}</version>
         </dependency>
 
+		<!-- ORACLE JDBC driver -->
+		<dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.4</version>
+        </dependency>
 
         <!-- MySQL C3P0 Data Pool -->
         <dependency>
@@ -322,6 +328,14 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
+    
+    <repositories>
+	    <repository>
+	      <id>my-repo1</id>
+	      <name>maven.in2p3.fr</name>
+	      <url>http://maven.in2p3.fr/</url>
+	    </repository>
+  	</repositories>
 
     <organization>
     	<name>Viettel Peru</name>

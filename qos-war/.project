@@ -39,4 +39,15 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.zeroturnaround.eclipse.jrebelNature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1469546648702</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.class</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>

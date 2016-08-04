@@ -1,5 +1,5 @@
 /**
- * @author v.lugovsky
+ * @author Nam, Nguyen Hoai
  * created on 16.12.2015
  */
 (function () {
@@ -17,27 +17,11 @@
 	  
 	  $scope.servers = [];
 	  
-    $scope.bitrateTypes = [
-      {
-    	id: 0,
-        name: 'Kb/s ',
-        href: '',
-        enable: false,
-        icon: 'socicon-stackoverflow',
-        description: 'kibibytes per second',
-        note: 'n * 1024'
-      },
-      {
-    	id: 1,
-        name: 'Mb/s',
-        href: '',
-        enable: false,
-        icon: 'socicon-stackoverflow',
-        description: 'mebibytes per second',
-        note: 'n'
-      }
-    ];
+	  $scope.bitrateTypes = BITRATE_TYPES;
+	  var openedToasts = [];
+	  $scope.options = toastConfig; 
 
+	  
     $scope.unconnect = function (item) {
     	// disable all
     	for (var i = 0; i < $scope.bitrateTypes.size(); i++) {
@@ -66,7 +50,7 @@
     $scope.createInfoMsg = function () {
     	$scope.clearToasts();
         if (!initLoading) {
-        	$scope.openToast();
+        	$scope.openToast('success');
         }
     };
     
@@ -79,35 +63,23 @@
     	$scope.createInfoMsg();
     };
 
-    var openedToasts = [];
-    $scope.options = {
-      autoDismiss: false,
-      positionClass: 'toast-top-center',
-      type: 'info',
-      timeOut: '2000',
-      extendedTimeOut: '2000',
-      allowHtml: false,
-      closeButton: false,
-      tapToDismiss: true,
-      progressBar: true,
-      newestOnTop: true,
-      maxOpened: 0,
-      preventDuplicates: false,
-      preventOpenDuplicates: false,
-      title: "Well done!",
-      msg: "You successfully update setting."
-    };
-
     $scope.clearToasts = function () {
       toastr.clear();
     };
 
-    $scope.openToast = function () {
-      angular.extend(toastrConfig, $scope.options);
-      openedToasts.push(toastr[$scope.options.type]($scope.options.msg, $scope.options.title));
-      var strOptions = {};
-      for (var o in  $scope.options) if (o != 'msg' && o != 'title')strOptions[o] = $scope.options[o];
-      $scope.optionsStr = "toastr." + $scope.options.type + "(\'" + $scope.options.msg + "\', \'" + $scope.options.title + "\', " + JSON.stringify(strOptions, null, 2) + ")";
+    $scope.openToast = function (type) {
+    	  angular.extend(toastrConfig, $scope.options);
+	      // Info
+	      if (type == 'success') {
+	    	  var toastType = 'info';
+		      var toastQuote = toastQuotesSetting[0];
+	      } else if (type == 'error') {
+	    	  var toastType = 'error';
+		      var toastQuote = toastQuotesSetting[1];
+	      }
+	      
+	      openedToasts.push(toastr[toastType](toastQuote.message, toastQuote.title, toastQuote.options));
+	      $scope.optionsStr = "toastr." + toastType + "(\'" + toastQuote.message + "\', \'" + toastQuote.title + "', " + JSON.stringify(toastQuote.options || {}, null, 2) + ")";
     };
 
     $scope.$on('$destroy', function iVeBeenDismissed() {
@@ -118,7 +90,7 @@
 	      // init bitrate
 		  $rootScope.bitrateType = $cookieStore.get('bitrateType');
 		  if ($rootScope.bitrateType == undefined) {
-			  // default Mb/s
+			  // default Mbps
 			  $rootScope.bitrateType = $scope.bitrateTypes[1];
 		  }
 		  $scope.selectBitrate($scope.bitrateTypes[$rootScope.bitrateType.id]);
@@ -129,7 +101,7 @@
 			  // init selectedServer
 			  $rootScope.selectedServer = $cookieStore.get('selectedServer');
 			  if ($rootScope.selectedServer == undefined) {
-				  // default Mb/s
+				  // default server
 				  $rootScope.selectedServer = $scope.servers[0];
 			  }
 			  $scope.selectedServer = $scope.servers[$rootScope.selectedServer.serverId]; 

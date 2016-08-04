@@ -21,6 +21,8 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
+import com.viettelperu.qos.model.dto.UserDTO;
+
 public class EncryptionUtil {
 	private static final String passPhrase = "biZndDtCMkdeP8K0V15OKMKnSi85";
 	
@@ -31,16 +33,6 @@ public class EncryptionUtil {
 	private static final int iterationCount = 1000;
 	
 	private static final int keySize = 256;
-//	var aesPack = {};
-//    var iv = CryptoJS.lib.WordArray.random(128/8).toString(CryptoJS.enc.Hex);
-//    aesPack.iv = iv;
-//    aesPack.salt = CryptoJS.lib.WordArray.random(128/8).toString(CryptoJS.enc.Hex);
-//    aesPack.keySize = 128;
-//    aesPack.iterations = 1000;
-//
-//    var key = CryptoJS.PBKDF2(
-//        "biZndDtCMkdeP8K0V15OKMKnSi85",
-//        CryptoJS.enc.Hex.parse(aesPack.salt), { keySize: aesPack.keySize/32, iterations: aesPack.iterations });
 	
 	public static String decrypt(String encryptedMessage) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -70,6 +62,24 @@ public class EncryptionUtil {
 		} catch (Exception e) {
 			return null;
 		}
+    }
+	
+	public static String decryptPassword(UserDTO userDTO) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+        String passPhrase = "biZndDtCMkdeP8K0V15OKMKnSi85";
+        String salt = userDTO.getSalt();
+        String iv = userDTO.getIv();
+        int iterationCount = userDTO.getIterations();
+        int keySize = userDTO.getKeySize();
+
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), hex(salt), iterationCount, keySize);
+        SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
+
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(hex(iv)));
+        byte[] decrypted = cipher.doFinal(base64(userDTO.getEncryptedPassword()));
+
+        return new String(decrypted, "UTF-8");
     }
 	
 	private String base64(byte[] bytes) {
