@@ -3,6 +3,8 @@ package com.viettelperu.qos.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.viettelperu.qos.framework.data.JPAEntity;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.h2.util.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,6 +44,13 @@ public class User extends JPAEntity<Long> implements Serializable {
     private @JsonIgnore String currentLoginIp;
     private @JsonIgnore String lastLoginIp;
 
+    private String algorithm;
+    private String salt;
+    private String secretQuestion;
+    private String secretAnswer;
+    private String docType;
+    private String docNumber;
+    
     private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Column @Email @NotNull @NotBlank
@@ -151,11 +160,14 @@ public class User extends JPAEntity<Long> implements Serializable {
      * @return SHA hash digest of the password
      */
     public static synchronized String hashPassword(String pass) {
-        return passwordEncoder.encode(pass);
+        //return passwordEncoder.encode(pass);
+    	return DigestUtils.sha1Hex(pass);
     }
-
-    public static synchronized boolean doesPasswordMatch(String rawPass, String encodedPass) {
-        return passwordEncoder.matches(rawPass, encodedPass);
+    
+    public static synchronized boolean doesPasswordMatch(String rawPass, String salt, String encodedPass) {
+    	String encryptPass = DigestUtils.sha1Hex(salt + rawPass);
+    	return StringUtils.equals(encryptPass, encodedPass);
+        //return passwordEncoder.matches(rawPass, encodedPass);
     }
 
     @Override
@@ -173,4 +185,94 @@ public class User extends JPAEntity<Long> implements Serializable {
                 ", lastLoginIp='" + lastLoginIp + '\'' +
                 '}';
     }
+
+	/**
+	 * @return the algorithm
+	 */
+    @Column(columnDefinition="varchar(128) default 'sha1'")
+	public String getAlgorithm() {
+		return algorithm;
+	}
+
+	/**
+	 * @param algorithm the algorithm to set
+	 */
+	public void setAlgorithm(String algorithm) {
+		this.algorithm = algorithm;
+	}
+
+	/**
+	 * @return the salt
+	 */
+	@Column
+	public String getSalt() {
+		return salt;
+	}
+
+	/**
+	 * @param salt the salt to set
+	 */
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	/**
+	 * @return the secretQuestion
+	 */
+	@Column
+	public String getSecretQuestion() {
+		return secretQuestion;
+	}
+
+	/**
+	 * @param secretQuestion the secretQuestion to set
+	 */
+	public void setSecretQuestion(String secretQuestion) {
+		this.secretQuestion = secretQuestion;
+	}
+
+	/**
+	 * @return the secretAnswer
+	 */
+	@Column
+	public String getSecretAnswer() {
+		return secretAnswer;
+	}
+
+	/**
+	 * @param secretAnswer the secretAnswer to set
+	 */
+	public void setSecretAnswer(String secretAnswer) {
+		this.secretAnswer = secretAnswer;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	@Column
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	/**
+	 * @return the docNumber
+	 */
+	@Column
+	public String getDocNumber() {
+		return docNumber;
+	}
+
+	/**
+	 * @param docNumber the docNumber to set
+	 */
+	public void setDocNumber(String docNumber) {
+		this.docNumber = docNumber;
+	}
 }

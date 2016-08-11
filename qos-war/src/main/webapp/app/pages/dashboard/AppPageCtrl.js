@@ -2,60 +2,9 @@
  * Created by NamNH on 6/25/2016.
  */
 angular.module('BlurAdmin.pages.dashboard')
-  .controller('MapModalCtrl', ['$scope', '$timeout', '$uibModalInstance', 'NgMap' , 'CommonService', MapModalCtrl]);
-// https://github.com/sindresorhus/speed-test 
-/** @ngInject */
-function MapModalCtrl($scope, $timeout, $uibModalInstance, NgMap, CommonService, lat, lng) {
-	$scope.lat;
-    $scope.lng;
-    
-    $scope.ok = function () {
-      $uibModalInstance.close($scope.link);
-    };
-    
-    (function initController() {
-        // init
-		//BackendCfg.setupHttp($http);
-		CommonService.getLocation(function(result) {
-			$scope.geoLocation = result;
-			$scope.lat = result.lat;
-			$scope.lng = result.lon;
-		});
-    })();
-    
-    $scope.$on('mapInitialized', function(event, map) {
-    	window.setTimeout(function () 
-		{
-			var center = new google.maps.LatLng($scope.lat, $scope.lng);
-			window.google.maps.event.trigger(map,
-					'resize');
-			map.setCenter(center);
-		}, 100);
-    }); 
-};
-  
-angular.module('BlurAdmin.pages.dashboard')
-	.controller('GeoLocationPageCtrl', GeoLocationPageCtrl);
-function GeoLocationPageCtrl($scope, $rootScope, $http, BackendCfg, CommonService) {
-	var geo = this;
-	$scope.geoLocation = {};
-	
-	(function initController() {
-        // init
-		//BackendCfg.setupHttp($http);
-		CommonService.getLocation(function(result) {
-			$scope.geoLocation = result;
-			$rootScope.geoLocation = result;
-		});
-    })();
-};
-
-angular.module('BlurAdmin.pages.dashboard')
 	.controller('AppPageCtrl', AppPageCtrl);
-//AppPageCtrl.$inject = ['$location', '$scope', '$rootScope', 'AppService', '$timeout', '$interval', '$uibModal'
-//                       ,'toastr', 'toastrConfig', 'CommonService', 'sharedService'];
 function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $interval, $uibModal
-						, toastr, toastrConfig, CommonService, sharedService, $sce, $window, BackendCfg) {
+						, toastr, toastrConfig, CommonService, sharedService, $sce, $window, BackendCfg, Upload) {
 	console.log("app controller");
 	var app = this;
 	var defaultConfig = angular.copy(toastrConfig);
@@ -64,7 +13,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     $scope.measuring = false;
     $scope.measuringDownload = false;
     $scope.measuringUpload = false;
-    $scope.isAlreadyNotifyUploading = false;
+    
+    
     // store the interval promise in this variable
     var promise;
     var promiseLatency;
@@ -76,8 +26,6 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     var STATUS_UPLOADING = 1;
     var STATUS_END = 2;
     $scope.statusMeasure;
-    
-    
     
     var isBusy = false;
     
@@ -155,11 +103,18 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         	$interval.cancel(promiseLatency);
         }
         
+        if (angular.isDefined(promiseUpload)) {
+        	$interval.cancel(promiseUpload);
+        }
+        
+        if (angular.isDefined(promiseUploadData)) {
+        	$interval.cancel(promiseUploadData);
+        }
+        
         // Reset
     	$scope.measuring = false;
     	$scope.measuringDownload = false;
         $scope.measuringUpload = false;
-        $scope.isAlreadyNotifyUploading = false;
         $scope.statusMeasure = STATUS_BEGIN;
     }
     
@@ -176,11 +131,20 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         data.endTime = $scope.endTimeTest;
         data.unitType = $rootScope.bitrateType.id;
     	
+        if (!app.validateHistoryData(data)) {
+        	$scope.openToastHistory('history-data-invalid');
+        	return;
+        }
+        
     	CommonService.createHistory(data, function(response) {
         	// Toast inform add success or fail
-        	$scope.openToastHistory();
+        	$scope.openToastHistory('create-history-success');
     	});
     }
+    
+    app.validateHistoryData = function (data) {
+    	return true;
+    };
     
     app.stopMeasure = function () {
     	console.log('stop measure speed');
@@ -199,6 +163,12 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 		console.log($scope.graphConfig.series[1]);
 		
 		sharedService.prepForBroadcast(2 , 'Speed Test done', broadcastData);
+		
+		// Stop uploading if any
+		if (file) {
+			console.log('--- abort upload -----');
+			file.upload.abort();
+		}
 
 		$scope.showMsg();
 		
@@ -221,16 +191,57 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         var data = $('#DownloadData').val();
         var time = $('#DownloadTime').val();
         // Push into array
-        if (data != "") {
+        if (data != "" && parseFloat(data) > 0) {
         	var number = parseFloat(data);
         	var time = parseFloat(time);
         	var point = [time, number];
         	$scope.graphConfig.series[0].data.push(point);
-    		$scope.speedConfig.series[0].data = [number];
+        	
+        	var speedNumber = number;
+        	if ($scope.unitType == 1 && speedNumber > MAX_BANDWIDTH_MBPS) {
+        		speedNumber = MAX_BANDWIDTH_MBPS;
+        	} else if ($scope.unitType == 0 && speedNumber > MAX_BANDWIDTH_MBPS * MBPS_TO_KBPS) {
+        		speedNumber = MAX_BANDWIDTH_MBPS * MBPS_TO_KBPS;
+        	}
+    		$scope.speedConfig.series[0].data = [speedNumber];
         }
     };
     
-    app.initChart = function() {
+    app.retrieveUploadData = function() {
+    	// Get status and data
+        var data = $('#UploadData').val();
+        var time = $('#UploadTime').val();
+        // Push into array
+        if (data != "" && parseFloat(data)) {
+        	var number = parseFloat(data);
+        	var time = parseFloat(time);
+        	var point = [time, number];
+        	
+        	if (!skipUploadPoint) {
+        		skipUploadPoint = true;
+        		return;
+        	}
+        	
+        	// normalizedDataPoint
+        	var latPoint;
+        	if ($scope.graphConfig.series[1].data.length != 0) {
+        		latPoint = $scope.graphConfig.series[1].data[$scope.graphConfig.series[1].data.length - 1];
+        		point = normalizedDataPoint(latPoint, point, $scope.unitType);
+        	}
+        	 
+        	$scope.graphConfig.series[1].data.push(point);
+        	
+        	var speedNumber = number;
+        	if ($scope.unitType == 1 && speedNumber > MAX_BANDWIDTH_MBPS) {
+        		speedNumber = MAX_BANDWIDTH_MBPS;
+        	} else if ($scope.unitType == 0 && speedNumber > MAX_BANDWIDTH_MBPS * MBPS_TO_KBPS) {
+        		speedNumber = MAX_BANDWIDTH_MBPS * MBPS_TO_KBPS;
+        	}
+    		$scope.speedConfig.series[0].data = [speedNumber];
+        }
+    };
+    
+    app.resetInitData = function() {
     	// reset data
         $scope.graphConfig.series[0].data = [];
         $scope.graphConfig.series[1].data = [];
@@ -240,6 +251,10 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         // Download data
         $('#DownloadData').val("");
         $('#DownloadTime').val("");
+        $('#UploadData').val("");
+        $('#UploadTime').val("");
+        
+        isBusy = false;
     };
     
     app.startMeasure = function () {
@@ -249,7 +264,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         $scope.startTimeTest = (new Date()).getTime();
         
         // reset data
-        app.initChart()
+        app.resetInitData();
         
     	$timeout(function () {
     		// stops any running interval to avoid two intervals running at the same time
@@ -267,6 +282,14 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         			app.cancelPromise();
         		} else {
                     isErrorPing = false;
+                    skipUploadPoint = false;
+                    
+                    // Update color for chart
+                    $scope.speedConfig.yAxis.plotBands[0].color = '#55BF3B';
+                    $scope.speedConfig.yAxis.plotBands[1].color = '#DDDF0D';
+                    $scope.speedConfig.yAxis.plotBands[2].color = '#DF5353';
+                    $scope.speedConfig.series[0].dial.backgroundColor = 'black';
+                    $scope.speedConfig.series[0].pivot.backgroundColor = 'black';
                     
         			// Broadcast item (status: end)
             		sharedService.prepForBroadcast(0 , 'Downloading ... ', {});
@@ -279,7 +302,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
           		  	// Check upload time to terminate
           		  	$timeout(function () {
           		  		console.log('$timeout after download: ' + MAX_DURATION_TEST/2);
-          		  		//Cancel the Timer.
+          		  		//Cancel the Timer .
           		        if (angular.isDefined(promise)) {
           		        	$interval.cancel(promise);
           		        }
@@ -287,42 +310,40 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
           		        if (angular.isDefined(promiseDownloadData)) {
         		        	$interval.cancel(promiseDownloadData);
         		        }
-          		      
-	          		  	if (!$scope.isAlreadyNotifyUploading) {
-	                    	sharedService.prepForBroadcast(1, 'Uploading ...', $scope.graphConfig.series[0].data);
-	                    	$scope.isAlreadyNotifyUploading = true;
-	                    }
+          		        
+	          			if (dReq && dReq.readyState != 4) {
+	          				console.log('-----abort xhr-----');
+	          				dReq.abort();
+	          			}
+	          			isBusy = false;
+	          			
+//	          		  	if (!$scope.isAlreadyNotifyUploading) {
+          		        // Broad cast to inform end download, start upload
+                    	sharedService.prepForBroadcast(1, 'Uploading ...', $scope.graphConfig.series[0].data);
+//	                    	$scope.isAlreadyNotifyUploading = true;
+//	                    }
 	            			
 	            		// Test upload
 	            		$scope.measuringDownload = false;
 	            		$scope.measuringUpload = true;
 	            		
-	            		$scope.statusMeasure = STATUS_UPLOADING;
-          		  	}, MAX_DURATION_TEST/2);
+//	            		$scope.statusMeasure = STATUS_UPLOADING;
+	            		promiseUpload = $interval(app.uploadDataCORS, 300);
+	            		promiseUploadData = $interval(app.retrieveUploadData, 200);
+          		  	}, MAX_DURATION_TEST / 2);
           		  	
-            		promiseLatency = $interval(app.measureLatency, 500);
-                    
-                    // Update color for chart
-                    $scope.speedConfig.yAxis.plotBands[0].color = '#55BF3B';
-                    $scope.speedConfig.yAxis.plotBands[1].color = '#DDDF0D';
-                    $scope.speedConfig.yAxis.plotBands[2].color = '#DF5353';
-                    $scope.speedConfig.series[0].dial.backgroundColor = 'black';
-                    $scope.speedConfig.series[0].pivot.backgroundColor = 'black';
+            		promiseLatency = $interval(app.measureLatency, 1000);
+            		
+            		// STOP stest
+            		$timeout(function () {
+            			app.stopMeasure();
+          		  	}, MAX_DURATION_TEST + 1000);
         		}
         	});
     	}, 300);
     }
     
     app.measureLatency = function () {
-    	// Breake
-    	var currentTime = (new Date()).getTime();
-    	var duration = currentTime - $scope.startTimeTest;
-    	// Completed test
-    	if (duration > MAX_DURATION_TEST) {
-    		app.stopMeasure();
-    		return;
-    	}
-    	
     	var serverUrl = $rootScope.selectedServer.url;
     	CommonService.ping(serverUrl + '/api/server/ping', function(responseTime) {
     		if (responseTime == -1) {
@@ -357,7 +378,6 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 //    		$scope.statusMeasure = STATUS_UPLOADING;
     		// Upload
 //    		$scope.uploadFile(1024 * 1);
-//    		app.uploadCORS();
 //    	}
     }
     
@@ -381,7 +401,171 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 	      });
     };
     
-    // Toast
+  //---------------------- Download ---------------------
+    $scope.downloadingSpeed;
+    $scope.downloadEvtLoaded;
+    $scope.downloadEvtTotal;
+    $scope.durationDownload;
+    var startDownloadTime;
+    var progressDownloadTime;
+    var endDownloadTime;
+    
+    var dReq;
+    $scope.downloadFile = function(n) {
+    	// Check busy
+    	if (isBusy) {
+    		return;
+    	}
+    	var serverUrl = $rootScope.selectedServer.url;
+    	
+    	dReq = $.ajax({
+    	    xhr: function() {
+    	        var xhr = new window.XMLHttpRequest();
+    	        xhr.addEventListener("loadstart", transferStart, false);
+    	        xhr.addEventListener("progress", transferProgress);
+    	        xhr.addEventListener("load", transferComplete);
+    	        xhr.addEventListener("error", transferFailed);
+    	
+    	       return xhr;
+    	    },
+    	    cache: false,
+//            contentType: false,
+//            processData: false,
+    	    type: 'GET',
+    	    url: serverUrl + "/api/file/download?n=" + n + "&rnd=" + new Date().getTime(),
+    	    success: function(data){
+    	        //Do something on success
+    	        console.log('download done');
+    	    },
+    	    xhrFields: {
+    	        //withCredentials: true,
+    	    },
+    	    beforeSend: function(xmlHttpRequest) {
+//    	    	xmlHttpRequest.withCredentials = true;
+//                startUploadTime = new Date().getTime();
+            }
+    	});
+    	
+    }
+    
+    // progress on transfers from the server to the client (downloads)
+    function transferProgress (oEvent) {
+	      $scope.$apply(function(){
+	            if (oEvent.lengthComputable) {
+	                $scope.downloadProgressPercent = Math.round(oEvent.loaded * 100 / oEvent.total);
+	                
+	                progressDownloadTime = (new Date()).getTime();
+	                var downLoaded = oEvent.loaded;
+	                var durationDownload = (progressDownloadTime - startDownloadTime);
+	                
+	                // Calculate
+	                var number = calculateBandwidth(downLoaded, durationDownload, $scope.unitType);
+	                
+	                $('#DownloadData').val(number);
+	                $('#DownloadTime').val(progressDownloadTime);
+	            } else {
+	                $scope.downloadProgressPercent = 'unable to compute';
+	                console.log('unable to compute');
+	            }
+	        })
+    }
+    
+    function transferStart(evt) {
+        isBusy = true;
+    	startDownloadTime = (new Date()).getTime();
+  		console.log('--- Start Download file ----');
+    }
+
+    function transferComplete(evt) {
+    	isBusy = false;
+    	endDownloadTime = (new Date()).getTime();
+  		$scope.durationDownload = endDownloadTime - startDownloadTime;
+  		console.log('--- Completed Download file take time:' + $scope.durationDownload);
+    }
+
+    function transferFailed(evt) {
+      console.log("An error occurred while transferring the file.");
+    }
+
+    function transferCanceled(evt) {
+      console.log("The transfer has been canceled by the user.");
+    }
+    
+    // --------------------------------------------------
+    var promiseUpload;
+    var promiseUploadData;
+    var file;
+    var skipUploadPoint;
+    app.uploadDataCORS = function() {
+    	if (isBusy) {
+        	return;
+        }
+    	// init/reset
+    	console.log('uploadDataCORS');
+    	
+        var uploadData = randomString(1024 * UPLOAD_SIZE_SAMPLE);
+    	var filename = "upload" + (new Date).getTime() + ".bin";
+        //file = new File([uploadData], filename);
+		file = new Blob([uploadData], {type: 'application/json'});
+    	
+        uploadUsing$http(file);
+    };
+    
+    
+    //---------------------- Upload ---------------------
+    var startUploadTime;
+    function uploadUsing$http(file) {
+    	var serverUrl = $rootScope.selectedServer.url + '/app/upload';
+    	
+        file.upload = Upload.http({
+          url: serverUrl,
+          method: 'POST',
+          headers: {
+            'Content-Type': file.type
+          },
+          data: file
+        });
+
+        file.upload.then(function (response) {
+          file.result = response.data;
+          isBusy = false;
+          console.log('Upload complete');
+        }, function (response) {
+          if (response.status > 0)
+            $scope.errorMsg = response.status + ': ' + response.data;
+        });
+
+        file.upload.xhr(function (xhr) {
+        	 xhr.upload.addEventListener('loadstart', function(){
+        		 console.log('----------- Start upload');
+        		 isBusy = true;
+        		 startUploadTime = new Date().getTime();
+        	 }, false);
+        });
+        
+        file.upload.progress(function (evt) {
+        	if (evt.lengthComputable) {
+        		file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                
+                var progressUploadTime = (new Date()).getTime();
+                var loaded = evt.loaded;
+                var durationUpload = (progressUploadTime - startUploadTime);
+                
+                if (durationUpload == 0 || loaded == 0) {
+                	return;
+                }
+                // Calculate
+                uploadingSpeed = calculateBandwidth(loaded, durationUpload, $scope.unitType);
+                
+                $('#UploadData').val(uploadingSpeed);
+                $('#UploadTime').val(progressUploadTime);
+            } else {
+                console.log('unable to compute upload');
+            }
+        });
+    }
+    
+    //-------------------- Toast ---------------------------
     var openedToasts = [];
     $scope.options = toastConfig;
 
@@ -415,11 +599,17 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
       }
     };
     
-    $scope.openToastHistory = function () {
+    $scope.openToastHistory = function (type) {
         angular.extend(toastrConfig, $scope.options);
+        
+        if (type == 'create-history-success') {
+        		var toastType = 'info';
+            	var toastQuote = $scope.quotesApp[2];
+	      } else if (type == 'history-data-invalid') {
+	    	  var toastType = 'error';
+		      var toastQuote = $scope.quotes[4];
+	      }
         // Info
-        var toastType = 'info';
-        var toastQuote = $scope.quotesApp[2];
         openedToasts.push(toastr[toastType](toastQuote.message, toastQuote.title, toastQuote.options));
         $scope.optionsStr = "toastr." + toastType + "(\'" + toastQuote.message + "\', \'" + toastQuote.title + "', " + JSON.stringify(toastQuote.options || {}, null, 2) + ")";
       };
@@ -430,150 +620,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     	$scope.openToast();
     };
     
-    $scope.$watch("statusMeasure", function() {
-        console.log("statusMeasure: " + $scope.statusMeasure);
-        
-//        var STATUS_BEGIN = -1;
-//        var STATUS_DOWNLOADING = 0;
-//        var STATUS_UPLOADING = 1;
-//        var STATUS_END = 2;
-        if ($scope.statusMeasure == STATUS_UPLOADING) {
-        	app.uploadCORS();
-        }
-    });
-    
-  //---------------------- Download ---------------------
-    $scope.downloadingSpeed;
-//    $scope.downloadProgressPercent;
-    $scope.downloadEvtLoaded;
-    $scope.downloadEvtTotal;
-    $scope.durationDownload;
-    var startDownloadTime;
-    var progressDownloadTime;
-    var endDownloadTime;
-//    $scope.$watch("downloadingSpeed", function() {
-//        console.log("downloadingSpeed: " + $scope.downloadingSpeed);
-//        
-//        // Calculate and push into chart
-////        var downValue = $scope.downloadProgressPercent;
-////        var downLoaded = $scope.downloadEvtLoaded;
-////        var downTotal = $scope.downloadEvtTotal;
-////        var duration = $scope.durationDownload;
-////        if (downValue != undefined && downValue > 0) {
-////        	var cal = $scope.calculateBandwidth(downLoaded, duration);
-//        if ($scope.downloadingSpeed != undefined && $scope.downloadingSpeed > 0) {
-//        	$scope.graphConfig.series[0].data.push($scope.downloadingSpeed);
-//        	$scope.speedConfig.series[0].data = [$scope.downloadingSpeed];
-//        }
-////        }
-//    });
-    
-    $scope.downloadFile = function(n) {
-    	// Check busy
-    	if (isBusy) {
-    		return;
-    	}
-        var oReq = new XMLHttpRequest();
-    	var serverUrl = $rootScope.selectedServer.url;
-
-    	oReq.addEventListener("loadstart", transferStart, false);
-        oReq.addEventListener("progress", transferProgress);
-        oReq.addEventListener("load", transferComplete);
-        oReq.addEventListener("error", transferFailed);
-//        oReq.addEventListener("abort", transferCanceled);
-        
-        oReq.open("GET", serverUrl + "/api/file/download?n=" + n + "&rnd=" + new Date().getTime())
-        // Start time
-        isBusy = true;
-        oReq.send();
-    }
-    
-    // progress on transfers from the server to the client (downloads)
-    function transferProgress (oEvent) {
-	      $scope.$apply(function(){
-	            if (oEvent.lengthComputable) {
-	                $scope.downloadProgressPercent = Math.round(oEvent.loaded * 100 / oEvent.total);
-	                
-	                progressDownloadTime = (new Date()).getTime();
-	                var downLoaded = oEvent.loaded;
-	                var durationDownload = (progressDownloadTime - startDownloadTime);
-	                
-	                // Calculate
-	                var number = calculateBandwidth(downLoaded, durationDownload, $scope.unitType);
-//	                var point = [progressDownloadTime, number];
-//	                $scope.downloadingSpeed = point;
-	                
-//	                console.log('---------- transferProgress ------------');
-//	                console.log('downLoaded:' + downLoaded);
-//	                console.log('durationDownload:' + durationDownload);
-//	                console.log('time:' + progressDownloadTime);
-//	                console.log('$scope.downloadingSpeed:' + $scope.downloadingSpeed);
-	                
-	                $('#DownloadData').val(number);
-	                $('#DownloadTime').val(progressDownloadTime);
-	            } else {
-	                $scope.downloadProgressPercent = 'unable to compute';
-	                console.log('unable to compute');
-	            }
-	        })
-    }
-    
-    function transferStart(evt) {
-    	startDownloadTime = (new Date()).getTime();
-  		console.log('--- Start Download file ----');
-    }
-
-    function transferComplete(evt) {
-    	isBusy = false;
-    	endDownloadTime = (new Date()).getTime();
-  		$scope.durationDownload = endDownloadTime - startDownloadTime;
-  		console.log('--- Completed Download file take time:' + $scope.durationDownload);
-    }
-
-    function transferFailed(evt) {
-      console.log("An error occurred while transferring the file.");
-    }
-
-    function transferCanceled(evt) {
-      console.log("The transfer has been canceled by the user.");
-    }
-    // --------------------------------------------------
-    app.uploadCORS = function() {
-    	// init/reset
-    	console.log('trigger click uploadCORS');
-    	//var receiverIframe = document.getElementById('UploadIframe').contentWindow;
-    	//var receiverIframe = $("#UploadIframe")[0].contentWindow;
-    	//var receiverIframe = $(window.UploadIframe.document);
-//    	var receiverIframe = document.getElementById("UploadIframe");
-    	//var receiverIframe = (x.contentWindow || x.contentDocument);
-//    	var receiverIframe = $("#UploadIframe").contents();
-//    	var iframe= $('#UploadIframe')[0];
-//    	var receiverIframe= iframe.contentWindow? iframe.contentWindow : iframe.contentDocument.defaultView;
-//    	console.log(receiverIframe);
-    	
-//    	var frames = window.frames || window.document.frames;
-//    	var aa = frames["UploadIframe"];
-//    	var iframeBody = $(frames["UploadIframe"].window.document).contents();
-    	
-//    	var receiverIframe = $('#UploadIframe')[0];
-//    	targetFrame.postMessage('the message', '*');
-    	
-    	// trigger upload
-//    	var postData = {'task': 'upload', 'target_origin' : $rootScope.selectedServer.url};
-//    	windowProxy.post(postData);
-//    	receiverIframe.postMessage(postData, $rootScope.selectedServer.url);
-    	
-    	$('#IndexIframe').contents().find('#uploadCORSBtn').trigger( "click" );
-    };
-    
-//    var windowProxy;
-//    $window.addEventListener('load', function () {
-//    	console.log('$window onload');
-//    	// Create a proxy window to send to and receive message from the guest iframe
-//    	windowProxy = new Porthole.WindowProxy($rootScope.selectedServer.url + '/proxy.html', 'UploadIframe');
-//    	windowProxy.addEventListener(onMessage);
-//    });
-    
+    // ------------------- Window event -------------------------------
     $window.addEventListener('resize', function () {
     	console.log('resize');
     	$timeout(function () {
@@ -584,54 +631,6 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     	}, 200);
 	});
     
-    //---------------------- Upload ---------------------
-    $window.addEventListener('message', function(event){
-        if (typeof(event.data) !== 'undefined'){
-        	console.log('==== event.data=====');
-        	console.log(event.data);
-        	var task = event.data.task;
-        	var result = event.data.data;
-        	var time = event.data.time;
-        	
-        	switch ( task ) { // postMessage tasks
-		        // update chart received in postMessage
-		        case 'uploading' :
-		            // Push into array
-	            	$scope.$apply(function(){
-	            		var number = parseFloat(result);
-	            		
-	            		// Check first time
-	            		if ($scope.graphConfig.series[1].data.length == 0 && $scope.graphConfig.series[0].data.length != 0) {
-	            			// Get time latest of Download chart
-	            			var latestDownloadPoint = $scope.graphConfig.series[0].data[$scope.graphConfig.series[0].data.length - 1];
-	            			time = latestDownloadPoint[0];
-	            		}
-	            		
-	            		var point = [time, number];
-	            		$scope.graphConfig.series[1].data.push(point);
-		        		$scope.speedConfig.series[0].data = [number];
-	            	});
-		            break;
-		
-		        case 'completed' :
-		        	$scope.$apply(function(){
-	            		var number = parseFloat(result);
-	            		var point = [time, number];
-	            		$scope.graphConfig.series[1].data.push(point);
-		        		$scope.speedConfig.series[0].data = [number];
-	            	});
-	        		
-		            // Stop
-		        	app.stopMeasure();
-		            break;
-		        
-		        //default:
-		    }
-           // handle message
-        }
-    });
-    
-    // --------------------------------------------------
     $scope.$on('$destroy', function() {
         // Make sure that the interval is destroyed too
     	app.cancelPromise();

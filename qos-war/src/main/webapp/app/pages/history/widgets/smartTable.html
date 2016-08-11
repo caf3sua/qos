@@ -21,14 +21,11 @@
     </tr>
     <tr>
       <th></th>
-      <th><input st-search="date" placeholder="Search Date" class="input-sm form-control search-input"
-                 type="search"/></th>
-      <th><input st-search="ips" placeholder="Search IPS" class="input-sm form-control search-input"
-                 type="search"/></th>
-      <th><input st-search="server" placeholder="Search Server" class="input-sm form-control search-input"
-                 type="search"/></th>
-      <th><input st-search="download" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="upload" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="startTimeDisplay" placeholder="Search Date" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="ips" placeholder="Search IPS" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="serverName" placeholder="Search Server" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="maxDownloadSpeed" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="maxUploadSpeed" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
       <th><input st-search="latency" placeholder="Search Latency" class="input-sm form-control search-input" type="search"/>
       </th>
       <th></th>
@@ -37,11 +34,11 @@
     <tbody>
     <tr ng-repeat="item in dataTableInit">
       <td class="table-id line-height-25">{{item.id}}</td>
-      <td class="line-height-25">{{item.startTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+      <td class="line-height-25">{{item.startTimeDisplay}}</td>
       <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.ips}}</td>
       <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.serverName}}</td>
-      <td class="line-height-25">max: {{item.maxDownloadSpeed}} Mbps</br>avg: {{item.downloadSpeed}} Mbps</td>
-      <td class="line-height-25">max: {{item.maxUploadSpeed}} Mbps</br>avg: {{item.uploadSpeed}} Mbps</td>
+      <td class="line-height-25">max: {{item.maxDownloadSpeed}} {{rateUnitDisplay}}</br>avg: {{item.downloadSpeed}} {{rateUnitDisplay}}</td>
+      <td class="line-height-25">max: {{item.maxUploadSpeed}} {{rateUnitDisplay}}</br>avg: {{item.uploadSpeed}} {{rateUnitDisplay}}</td>
       <td class="line-height-25">min: {{item.minLatency}} ms</br>avg: {{item.latency}} ms</td>
       <td class="line-height-25">
       	<a href ng-click="openHistoryDetailModal({{item}})"><i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px;color: blue;"></i></a>

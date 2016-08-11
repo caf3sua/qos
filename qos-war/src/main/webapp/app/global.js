@@ -4,17 +4,22 @@
 var SERVER_URL = "";
 
 // Constant
+var MAX_BANDWIDTH_MBPS = 100;
 var BYTE_TO_MBPS = 1 / (1000 * 128);
 var BYTE_TO_KBPS = 1 / 1000;
 var MBPS_TO_KBPS = 128;
+
+var DELTA_DIFFERENCE_MBPS = 5;
+var DELTA_DIFFERENCE_KBPS = DELTA_DIFFERENCE_MBPS * 128;
 
 var MAX_DURATION_TEST = 10 * 1000; // ms
 var DURATION_UPLOAD = MAX_DURATION_TEST / 2;
 var UPLOAD_TIME_SLEEP = 200;
 
+
 // size sample
 var UPLOAD_SIZE_SAMPLE = 1024 * 4;
-var DOWNLOAD_SIZE_SAMPLE = 1024;
+var DOWNLOAD_SIZE_SAMPLE = 1024 * 10;
 
 var BITRATE_TYPES = [
        {
@@ -46,3 +51,42 @@ var BITRATE_TYPES = [
 		return (loadedSize * BYTE_TO_KBPS)/ (duration / 1000);
 	}
 };
+
+function randomString(len) {
+    var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+    	var randomPoz = Math.floor(Math.random() * charSet.length);
+    	randomString += charSet.substring(randomPoz,randomPoz+1);
+    }
+    return randomString;
+}
+
+function normalizedDataPoint(latPoint, point, unitType) {
+	// Check null
+	if (latPoint == undefined || latPoint == null || point == null) {
+		return;
+	}
+	
+//	DELTA_DIFFERENCE_MBPS = 5;
+//	var DELTA_DIFFERENCE_KBPS = DELTA_DIFFERENCE_MBPS * 128;
+	var diff;
+	// Mbps
+	if (unitType == 1) {
+		diff = DELTA_DIFFERENCE_MBPS;
+	} else {
+		diff = DELTA_DIFFERENCE_KBPS;
+	}
+	
+	// Get latest point
+	var delta = Math.abs(latPoint[1] - point[1]);
+	console.log('delta:' + delta);
+	
+	if ((delta > diff) && (latPoint[1] > point[1])) {
+		point[1] = latPoint[1] - diff;
+	} else if ((delta > diff) && (latPoint[1] < point[1])) {
+		point[1] = latPoint[1] + diff;
+	}
+	
+	return point;
+}

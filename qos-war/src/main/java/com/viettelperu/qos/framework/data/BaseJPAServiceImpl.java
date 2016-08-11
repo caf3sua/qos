@@ -37,6 +37,6 @@ public abstract class BaseJPAServiceImpl<T extends Entity, ID extends Serializab
     }
 
     public Collection<T> findAllByPage(int pageNum, int countPerPage, Order order) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    	return baseJpaRepository.findAllByPage(pageNum, countPerPage, order);
     }
 }

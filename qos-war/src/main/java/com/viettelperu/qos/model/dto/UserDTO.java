@@ -12,10 +12,19 @@ public class UserDTO {
     String encryptedPassword;
     String iv;
     String salt;
+    String applicationType;
     int keySize;
     int iterations;
 
-    public String getEmail() {
+    public String getApplicationType() {
+		return applicationType;
+	}
+
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
+	}
+
+	public String getEmail() {
         return email;
     }
 

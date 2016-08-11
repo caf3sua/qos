@@ -48,7 +48,6 @@ angular.module('BlurAdmin.theme')
         		var responseTime = 0;
                 var start = (new Date()).getTime();
                 
-        		console.log("Ping url:" + URL);
 //        		$http.get(URL + '?rnd=' + (new Date().getTime())).then(function(result) {
 //        			responseTime = (new Date().getTime()) - start;
 //        			// ping : router from source -> destination

@@ -104,7 +104,7 @@
 				  // default server
 				  $rootScope.selectedServer = $scope.servers[0];
 			  }
-			  $scope.selectedServer = $scope.servers[$rootScope.selectedServer.serverId]; 
+			  $scope.selectedServer = $scope.servers[$rootScope.selectedServer.id]; 
 		  });
 		  
 		  // Update flag

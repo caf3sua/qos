@@ -9,8 +9,9 @@ angular.module('BlurAdmin.pages.history')
 .controller('HistoryDetailModalCtrl', HistoryDetailModalCtrl);
 
 /** @ngInject */
-function HistoryDetailModalCtrl($scope, $uibModalInstance, item) {
+function HistoryDetailModalCtrl($rootScope, $scope, $uibModalInstance, item) {
 	  $scope.item = item;
+	  $scope.unitRateDisplay = $rootScope.bitrateType.name;
 	
 	  $scope.ok = function () {
 		  $uibModalInstance.close(item);
@@ -60,6 +61,11 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	  	$scope.quotes = toastQuotesHistory;
 	  	$scope.options = toastConfig;
 	  	var openedToasts = [];
+	  	
+	  	
+	  	// Display rate
+	  	$scope.rateUnit;
+	  	$scope.rateUnitDisplay;
 	  	
 	  	$scope.openHistoryDetailModal = function (item) {
 		      var uibModalInstance = $uibModal.open({
@@ -137,7 +143,12 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    };
 	  
 	    $scope.getHistoryData = function () {
-	    	$scope.graphHistoryConfig = graphHistoryConfig;
+    		// Append unit rate for chart
+	    	if ($scope.rateUnit == 0) {
+	    		$scope.graphHistoryConfig = graphHistoryConfigKbps;
+	    	} else {
+	    		$scope.graphHistoryConfig = graphHistoryConfigMbps;
+	    	}
 	    	
 	    	$scope.graphHistoryConfig.series[0].data = [];
     		$scope.graphHistoryConfig.series[1].data = [];
@@ -154,10 +165,15 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    		
 	    		if (data.code == 200) {
 	    			$scope.dataTable = data.result;
-	    			console.log($scope.dataTable);
 	    			for (var i = 0; i < $scope.dataTable.length; i++) {
 	    				if (i >= MAX_GRAPH_ITEM) {
 	    					break;
+	    				}
+	    				
+	    				// Convert data
+	    				// Kbps
+	    				if ($scope.rateUnit == 0) {
+	    					converRateDisplayData($scope.dataTable[i]);
 	    				}
 	    				
 	    				$scope.graphHistoryConfig.series[1].data.push($scope.dataTable[i].downloadSpeed);
@@ -183,7 +199,17 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    	});
 	    };
 	    
+	    function converRateDisplayData (obj) {
+	    	obj.downloadSpeed = obj.downloadSpeed * MBPS_TO_KBPS;
+	    	obj.uploadSpeed = obj.uploadSpeed * MBPS_TO_KBPS;
+    		obj.maxDownloadSpeed = obj.maxDownloadSpeed * MBPS_TO_KBPS;
+    		obj.maxUploadSpeed = obj.maxUploadSpeed * MBPS_TO_KBPS;
+	    }
+	    
 	    (function initController() {
+		  	$scope.rateUnit = $rootScope.bitrateType.id;
+		  	$scope.rateUnitDisplay = $rootScope.bitrateType.name;
+	    	
 	    	$timeout(function () {
 	    		// Get data from server
 	    		$scope.getHistoryData();

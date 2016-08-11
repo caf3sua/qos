@@ -1,8 +1,18 @@
 package com.viettelperu.qos.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
 import com.viettelperu.qos.model.dto.ServerDTO;
-import com.viettelperu.qos.service.CategoryService;
+import com.viettelperu.qos.model.entity.Server;
 import com.viettelperu.qos.service.ServerService;
 
 /**
@@ -44,26 +54,20 @@ public class ServerController extends BaseController {
     @RequestMapping(value = "/getAllServerInfo", method = RequestMethod.GET)
     public @ResponseBody
     APIResponse getAllServerInfo() throws Exception {
-        //Category category = categoryService.findByCategoryName(parentCatName);
-    	//List<Server> serverInfos = serverService.findAll();
-        List<ServerDTO> serverInfos = new ArrayList<>();
-        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "localhost"
-        		, 0, "online", "VN", "http://localhost:8080/qos");
-        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.71.224.225"
-        		, 1, "online", "VN", "http://118.71.224.225:8080/qos");
-        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3"
-        		, 2, "online", "PE", "http://192.168.1.3");
-        ServerDTO s4 = new ServerDTO(3l, "[PE] London - 1 Gb/s - Bitel", "192.168.1.4"
-        		, 3, "offline", "GB", "http://192.168.1.4");
-        ServerDTO s5 = new ServerDTO(4l, "[PE] TPBank - 1 Gb/s", "103.232.56.17"
-        		, 4, "online", "PE", "http://103.232.56.17:8080/qos");
-        serverInfos.add(s1);
-        serverInfos.add(s2);
-        serverInfos.add(s3);
-        serverInfos.add(s4);
-        serverInfos.add(s5);
-
-        return APIResponse.toOkResponse(serverInfos);
+    	LOG.info("getAllServerInfo");
+    	List<Server> servers = serverService.findAll();
+//        List<ServerDTO> servers = new ArrayList<>();
+//        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "localhost"
+//        		, 0, "online", "VN", "http://localhost:8080/qos-service");
+//        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.71.224.225"
+//        		, 1, "online", "VN", "http://118.71.224.225:8080/qos");
+//        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3"
+//        		, 2, "offline", "PE", "http://192.168.1.3");
+//        servers.add(s1);
+//        servers.add(s2);
+//        servers.add(s3);
+        
+        return APIResponse.toOkResponse(servers);
     }
     
     /**
@@ -87,4 +91,61 @@ public class ServerController extends BaseController {
         resObj.setResult("OK");
         return new ResponseEntity<>(resObj, headers, HttpStatus.OK);
     }
+    
+    /**
+     * Method to get the category by given id
+     * GET
+     *
+     * @param catId
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/ipinfo", method = { RequestMethod.GET, RequestMethod.POST })
+    public @ResponseBody
+    ResponseEntity getIpInfo(HttpServletRequest request) throws Exception {
+    	// Generate the http headers with the file properties
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        // Get ip info
+        String remoteAddr = request.getRemoteAddr();
+        if (remoteAddr.equals("0:0:0:0:0:0:0:1")) {
+            InetAddress localip = java.net.InetAddress.getLocalHost();
+            remoteAddr = localip.getHostAddress();
+        }
+        
+        String ipInfo = sendIpApi(remoteAddr);
+        
+        APIResponse resObj = new APIResponse();
+        resObj.setCode(200);
+        resObj.setResult(ipInfo);
+        resObj.setExtraResult(remoteAddr);
+        return new ResponseEntity<>(resObj, headers, HttpStatus.OK);
+    }
+    
+    private String sendIpApi(String ipAddress) throws IOException {
+    	LOG.debug("Get Ip Info: " + "http://ip-api.com/json/" + ipAddress);
+    	
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpGet httpGet = new HttpGet("http://ip-api.com/json/" + ipAddress);
+//		httpGet.addHeader("User-Agent", USER_AGENT);
+		CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				httpResponse.getEntity().getContent()));
+
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = reader.readLine()) != null) {
+			response.append(inputLine);
+		}
+		reader.close();
+
+		// print result
+		httpClient.close();
+		
+		return response.toString();
+	}
 }

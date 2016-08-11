@@ -99,6 +99,13 @@ var toastQuotesApp = [
 	          options: {
 	            allowHtml: true
 	          }
+	        },
+	        {
+	          title: 'Error!',
+	          message: 'Can not create history due by Data invalid.',
+	          options: {
+	            allowHtml: true
+	          }
 	        }
       ];
 

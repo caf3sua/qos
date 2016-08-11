@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                            http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        id="com.viettelperu.qos" version="2.5">
+    <display-name>Service for Viettel Peru</display-name>
+
+    <!-- Spring Framework Configuration -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:config/spring/appContext-interceptor.xml,
+            classpath:config/spring/appContext-servlet.xml
+        </param-value>
+    </context-param>
+
+    <!-- Filter Configurations -->
+    <!-- UTF-8 encoding filter -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>
+            org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<filter>
+		<filter-name>cors_filter</filter-name>
+		<filter-class>com.viettelperu.qos.auth.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cors_filter</filter-name>
+		<url-pattern>/app/*</url-pattern>
+	</filter-mapping>
+	
+    <!-- Upload servlet -->
+    <servlet>
+		<servlet-name>file_upload</servlet-name>
+		<servlet-class>com.viettelperu.qos.servlet.FileUploadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>file_upload</servlet-name>
+		<url-pattern>/app/upload</url-pattern>
+	</servlet-mapping>
+
+    <!-- Servlet Configurations -->
+    <!-- Spring Servlet for WebApp -->
+    <servlet>
+        <servlet-name>webAppDispatcherServlet</servlet-name>
+        <servlet-class>
+            com.viettelperu.qos.servlet.QosWebAppDispatcherServlet
+        </servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:config/spring/appContext-qos.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>webAppDispatcherServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Mentioning the Context Loader Listener class of Spring Framework as a listener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/api/error</location>
+    </error-page>
+</web-app>

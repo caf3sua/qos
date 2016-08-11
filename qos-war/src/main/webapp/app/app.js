@@ -10,7 +10,7 @@ var BlurAdmin = angular.module('BlurAdmin', [
   'smart-table',
   "xeditable",
   'ui.slimscroll',
-//  'ngFileUpload',
+  'ngFileUpload',
 //  'ngJsTree',
 //  'angular-progress-button-styles',
   'ngCookies',

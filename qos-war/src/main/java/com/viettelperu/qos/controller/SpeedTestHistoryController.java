@@ -1,9 +1,12 @@
 package com.viettelperu.qos.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +120,15 @@ public class SpeedTestHistoryController extends BaseController {
     		return APIResponse.toOkResponse(history, HttpStatus.NOT_FOUND.value());
     	}
     	
-        return APIResponse.toOkResponse(history);
+    	// Convert to DTO
+    	Mapper mapper = new DozerBeanMapper();
+    	List<SpeedTestHistoryDTO> historyDTO = new ArrayList<>();
+    	for (SpeedTestHistory speedTestHistory : history) {
+    		SpeedTestHistoryDTO item = mapper.map(speedTestHistory, SpeedTestHistoryDTO.class);
+    		historyDTO.add(item);
+		}
+    	
+        return APIResponse.toOkResponse(historyDTO);
     }
     
     /**

@@ -97,8 +97,8 @@ var speedConfig = {
 //                    fontSize: "30px"
 //                },
 //                color: "white",
-//                crop: false,
-//                overflow: "none",
+                crop: false,
+                overflow: "none",
                 formatter: function () {
                 	var s = "";
                 	if (this.point.y != undefined) {
@@ -106,8 +106,8 @@ var speedConfig = {
                 	}
                     return s;
                 },
-//                y: -65,
-//                zIndex: 10
+                y: 110,
+                zIndex: 10
             },
 //	        tooltip: {
 //	        	useHTML: true,
@@ -151,9 +151,13 @@ var graphConfig = {
         },
         color: '#3747F0',
         tooltip: {
-//        	headerFormat: '<b>{series.name}</b><br>',
+//        	dateTimeLabelFormats: {
+//                hour: '%S.%L'
+//            },
+        	xDateFormat: '%M:%S.%L',
+//        	headerFormat: 'Time: {point.x:%S.%L}</br>',//Highcharts.dateFormat('%S.%L', point.x),
 //            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-        	useHTML: true,
+        	useHTML: false,
         	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
             shared: true
         },
@@ -165,8 +169,7 @@ var graphConfig = {
             enabled: false
         },
         tooltip: {
-//        	headerFormat: '<b>{series.name}</b><br>',
-//            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+        	xDateFormat: '%M:%S.%L',
         	useHTML: true,
         	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
             shared: true
@@ -245,7 +248,7 @@ var latencyGraphConfig = {
     },
 };
 
-var graphHistoryConfig = {
+var graphHistoryConfigMbps = {
         options: {
             chart: {
                 zoomType: 'xy'
@@ -323,6 +326,89 @@ var graphHistoryConfig = {
             data: [],
             tooltip: {
                 valueSuffix: ' Mbps'
+            }
+
+        }]
+    };
+
+var graphHistoryConfigKbps = {
+        options: {
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Speed test history data'
+            },
+            xAxis: [{
+                categories: []
+            }],
+            yAxis: [{ // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Speed rate',
+                    style: {
+                        color: '#4572A7'
+                    }
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + ' Kbps';
+                    },
+                    style: {
+                        color: '#4572A7'
+                    }
+                }
+
+            }, { // Tertiary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Latency',
+                    style: {
+                        color: '#AA4643'
+                    }
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + ' ms';
+                    },
+                    style: {
+                        color: '#AA4643'
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            credits: false
+        },
+        series: [
+		{
+		    name: 'Latency',
+		    color: COLOR_LATENCY,
+		    type: 'column',
+		    yAxis: 1,
+		    data: [],
+		    pointWidth: 15,
+		    tooltip: {
+		        valueSuffix: ' ms'
+		    }
+		}, {
+		    name: 'Download',
+		    color: COLOR_DOWNLOAD,
+		    type: 'line',
+		    data: [],
+		    tooltip: {
+		        valueSuffix: ' Kbps'
+		    }
+		
+		}, {
+            name: 'Upload',
+            color: COLOR_UPLOAD,
+            type: 'line',
+            data: [],
+            tooltip: {
+                valueSuffix: ' Kbps'
             }
 
         }]

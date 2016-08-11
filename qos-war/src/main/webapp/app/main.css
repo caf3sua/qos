@@ -1935,7 +1935,7 @@ a.sn-link {
   margin-top: 10px; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Roboto", sans-serif;
+  font-family: "MuseoSans", sans-serif;
   width: 100%;
   margin-top: 0; }
 
@@ -2104,7 +2104,7 @@ h5 {
 
 p {
   margin-bottom: 12px;
-  font-family: "Roboto", sans-serif;
+  font-family: "MuseoSans", sans-serif;
   font-size: 14px; }
 
 p.small-text {
@@ -2702,14 +2702,14 @@ body {
 
 html {
   position: relative;
-  min-width: 320px; }
+  min-width: 340px; }
 
 html, body {
   min-height: 100%;
-  min-width: 320px; }
+  min-width: 340px; }
 
 body {
-  font: 14px/16px "Roboto", sans-serif;
+  font: 14px/16px "MuseoSans", sans-serif;
   color: #666666;
   background-color: #F0F3F4; }
   body.blur-theme::before {
@@ -2981,6 +2981,15 @@ a {
       -webkit-animation: spin 1.5s linear infinite;
               animation: spin 1.5s linear infinite;
       /* Chrome, Firefox 16+, IE 10+, Opera */ }
+
+@font-face {
+  font-family: 'MuseoSans';
+  src: url("../assets/fonts/MuseoSans.otf");
+  /*src: url("../assets/fonts/socicon.eot?#iefix") format("embedded-opentype"), url("../assets/fonts/socicon.woff") format("woff"), url("../assets/fonts/socicon.woff2") format("woff2"), url("../assets/fonts/socicon.ttf") format("truetype"), url("../assets/fonts/socicon.svg#sociconregular") format("svg");*/
+  font-weight: 400;
+  font-style: normal;
+  text-transform: initial; 
+}
 
 @font-face {
   font-family: 'socicon';
@@ -3884,7 +3893,7 @@ h1.al-title {
   box-shadow: 2px 0px 3px rgba(0, 0, 0, 0.5);
   height: 66px;
   width: 100%;
-  min-width: 320px;
+  min-width: 340px;
   padding: 0 32px 0 40px; }
   .page-top.scrolled {
     background-color: rgba(0, 0, 0, 0.85); }
@@ -3893,7 +3902,7 @@ a.al-logo {
   color: #ffffff;
   display: block;
   font-size: 24px;
-  font-family: "Roboto", sans-serif;
+  font-family: "MuseoSans", sans-serif;
   white-space: nowrap;
   float: left;
   outline: none !important;
@@ -4895,6 +4904,8 @@ a.fc-more {
   opacity: 0.9; }
 
 .pie-charts {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
   color: #666666; }
   .pie-charts .pie-chart-item-container {
     position: relative;
@@ -4920,9 +4931,13 @@ a.fc-more {
       right: 0px;
       top: 3px;
       z-index: -1; }
-  @media screen and (min-width: 1325px) and (max-width: 1650px), (min-width: 700px) and (max-width: 830px), (max-width: 400px) {
-    .pie-charts .chart-icon {
-      display: none; } }
+  /*(min-width: 1325px) and (max-width: 1650px), (min-width: 700px) and (max-width: 830px), */
+  @media screen and (min-width: 1325px) and (max-width: 1650px), (min-width: 700px) and (max-width: 830px), (max-width: 420px) {
+    .pie-charts .chart-icon-showoff {
+      display: none;
+    }
+  }
+      
   .pie-charts .chart {
     position: relative;
     display: inline-block;
@@ -5538,7 +5553,7 @@ label.todo-checkbox {
   .chart-bg {
     top: 30px; } }
 
-@media (max-width: 320px) {
+@media (max-width: 340px) {
   .chart-bg {
     left: 50px;
     top: 50px;

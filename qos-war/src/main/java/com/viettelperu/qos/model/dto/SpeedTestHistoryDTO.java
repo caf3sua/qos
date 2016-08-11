@@ -1,5 +1,7 @@
 package com.viettelperu.qos.model.dto;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -42,6 +44,19 @@ public class SpeedTestHistoryDTO {
 	// Extend
 	String ipsCountryCode;
 	String serverCountryCode;
+	String startTimeDisplay;
+	
+	public String getStartTimeDisplay() {
+		if (this.startTime != null) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return df.format(this.startTime);
+		}
+		return null;
+	}
+
+	public void setStartTimeDisplay(String startTimeDisplay) {
+		this.startTimeDisplay = startTimeDisplay;
+	}
 
 	public Long getId() {
 		return id;

@@ -33,13 +33,13 @@ import com.viettelperu.qos.auth.AuthenticationFailedException;
 import com.viettelperu.qos.auth.JWTTokenAuthFilter;
 import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
-import com.viettelperu.qos.model.dto.CustomerDTO;
 import com.viettelperu.qos.model.dto.UserDTO;
 import com.viettelperu.qos.model.entity.User;
 import com.viettelperu.qos.service.UserService;
 import com.viettelperu.qos.util.EncryptionUtil;
 import com.viettelperu.qos.ws.QosWebService;
 import com.viettelperu.qos.ws.wsdl.radius.GetMSISDNResponse;
+import com.viettelperu.qos.ws.wsdl.radius.ResultResponse;
 import com.viettelperu.qos.ws.wsdl.vascm.CheckSubExistsActiveResponse;
 import com.viettelperu.qos.ws.wsdl.vascm.ViewSubscriberByIsdnResponse;
 
@@ -61,6 +61,8 @@ public class UserController extends BaseController {
 
     private @Autowired UserService userService;
     private @Autowired QosWebService qosWebService;
+    
+    private static final String SALT = "d9116fa96df7c0b14da85ff5fdd69743";
     
     @Autowired
     private Environment env;
@@ -93,36 +95,6 @@ public class UserController extends BaseController {
         }
 
         return APIResponse.toOkResponse(authResp);
-    	
-//    	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
-//        Validate.isTrue(StringUtils.isNotBlank(userDTO.getEncryptedPassword()), "Encrypted password is blank");
-////        String password = decryptPassword(userDTO);
-//        
-////        String wsUsername = env.getProperty("wsUsername");
-////        ComboPooledDataSource dataSource = (ComboPooledDataSource) _applicationContext.getBean("dataSource");
-//        
-////        String encrypted = EncryptionUtil.encrypt("12345678");
-////        String decrypted = EncryptionUtil.decrypt(encrypted);
-////        GetMSISDNResponse responseSoap = qosWebService.getMSISDN("nam", "12345678", "127.0.0.1");
-////        System.out.println(responseSoap);
-//        
-//        LOG.info("Looking for user by username: " + userDTO.getUsername());
-//        //User user = userService.findByUsername(userDTO.getUsername());
-//        
-//        HashMap<String, Object> authResp = new HashMap<>();
-////        if(userService.isValidPass(user, password)) {
-////            LOG.info("User authenticated: "+user.getEmail());
-////            userService.loginUser(user, request);
-//        UserDTO user = new UserDTO();
-//        user.setUsername("nam");
-//        user.setIsdn("0976075335");
-//        
-//        createAuthResponse(user, authResp);
-////        } else {
-////            throw new AuthenticationFailedException("Invalid username/password combination");
-////        }
-//
-//        return APIResponse.toOkResponse(authResp);
     }
     
     /**
@@ -138,25 +110,39 @@ public class UserController extends BaseController {
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getIp()), "Ip Address is blank");
 
         LOG.info("Looking for phone number by IpAddress: " + userDTO.getIp());
-        // Get wsUsername/wsPassword
-//    	String wsUsernameEncrypted = env.getProperty("wsUsername_getMSISDN");
-//    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
-//    	String wsPasswordEncrypted = env.getProperty("wsPassword_getMSISDN");
-//    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
-    	
-//        GetMSISDNResponse responseSoap = qosWebService.getMSISDN(wsUsername, wsPassword, userDTO.getIp());
-        
-        // TODO: dump data
         HashMap<String, Object> authResp = new HashMap<>();
         UserDTO user = new UserDTO();
-        if (StringUtils.equals(userDTO.getIp(), "192.168.1.1")) {
-        	user.setUsername("quang");
-            user.setIsdn("0976000001");
-        } else if (StringUtils.equals(userDTO.getIp(), "192.168.1.2")) {
-        	user.setUsername("huy");
-            user.setIsdn("0976000002");
+        
+        boolean dumpMode = Boolean.parseBoolean(env.getProperty("webservice_dump_mode"));
+        if (dumpMode) {
+        	String applicationType = userDTO.getApplicationType();
+        	if (StringUtils.equalsIgnoreCase(applicationType, "Android")) {
+        		user.setUsername("0976000001");
+                user.setIsdn("0976000001");
+            } else if (StringUtils.equalsIgnoreCase(applicationType, "iOs")) {
+            	user.setUsername("0976000002");
+                user.setIsdn("0976000002");
+            } else {
+            	throw new AuthenticationFailedException("Cannot find ISDN by IpAddress");
+            }
         } else {
-        	throw new AuthenticationFailedException("Cannot find ISDN by IpAddress");
+	        // Get wsUsername/wsPassword
+	    	String wsUsernameEncrypted = env.getProperty("wsUsername_getMSISDN");
+	    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+	    	String wsPasswordEncrypted = env.getProperty("wsPassword_getMSISDN");
+	    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+	        GetMSISDNResponse responseSoap = qosWebService.getMSISDN(wsUsername, wsPassword, userDTO.getIp());
+	        
+	        // Get information
+	        ResultResponse result = responseSoap.getReturn();
+	        if (null != result) {
+	        	if (result.getCode() == 0) {
+	                user.setIsdn(result.getDesc());
+	                user.setUsername(result.getDesc());
+	        	}
+	        } else {
+	        	throw new AuthenticationFailedException("Cannot find ISDN by IpAddress");
+	        }
         }
         
         createAuthResponse(user, authResp);
@@ -236,12 +222,17 @@ public class UserController extends BaseController {
         }
 
         LOG.info("Creating user: "+userDTO.getEmail());
+        
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setUsername(userDTO.getUsername());
         user.setPassword(password);
         user.setEnabled(true);
         user.setRole(User.Role.USER);
+        // Encrypt
+        user.setAlgorithm("SHA1");
+        user.setSalt(SALT);
+        
         userService.registerUser(user, request);
 
         HashMap<String, Object> authResp = new HashMap<>();

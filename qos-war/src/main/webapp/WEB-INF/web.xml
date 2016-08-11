@@ -40,6 +40,15 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+	<filter>
+		<filter-name>cors_filter</filter-name>
+		<filter-class>com.viettelperu.qos.auth.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cors_filter</filter-name>
+		<url-pattern>/app/*</url-pattern>
+	</filter-mapping>
+	
     <!-- JWT Token Auth filter -->
     <filter>
         <filter-name>jwtTokenAuthFilter</filter-name>
@@ -50,6 +59,16 @@
         <filter-name>jwtTokenAuthFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <!-- Upload servlet -->
+    <servlet>
+		<servlet-name>file_upload</servlet-name>
+		<servlet-class>com.viettelperu.qos.servlet.FileUploadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>file_upload</servlet-name>
+		<url-pattern>/app/upload</url-pattern>
+	</servlet-mapping>
 
     <!-- Servlet Configurations -->
     <!-- Spring Servlet for WebApp -->

@@ -37,13 +37,13 @@ public class UserServiceImpl extends BaseJPAServiceImpl<User, Long> implements U
 
     @Override
     public boolean isValidPass(User user, String rawPass) {
-        return User.doesPasswordMatch(rawPass, user.getPassword());
+        return User.doesPasswordMatch(rawPass, user.getSalt(), user.getPassword());
     }
 
 
     @Override
     public User registerUser(User user, HttpServletRequest request) {
-        user.setPassword(User.hashPassword(user.getPassword()));
+        user.setPassword(User.hashPassword(user.getSalt() + user.getPassword()));
         user.setCurrentLoginAt(new Date());
         user.setCurrentLoginIp(request.getRemoteHost());
         user.setLoginCount(0);
