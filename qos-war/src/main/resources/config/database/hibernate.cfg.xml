@@ -6,7 +6,7 @@
 <hibernate-configuration>
     <session-factory>
         <!-- The dialect to be used for the hibernate and config.database interactions -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.dialect">${hibernate.dialect}</property>
 
         <!-- You will usually want to set this to true while debugging hibernate queries -->
         <property name="hibernate.show_sql">true</property>

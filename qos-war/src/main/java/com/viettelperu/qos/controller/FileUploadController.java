@@ -176,26 +176,4 @@ public class FileUploadController extends BaseController {
 //        return APIResponse.toOkResponse(fileUpload);
         return new ResponseEntity<>(fileUpload, headers, HttpStatus.OK);
     }
-    
-    /**
-     * Method to handle creation of the category by extracting the categoryInfo json from
-     * POST body expected in the format - {"name":"cat1", "priority":2, "parent":"pCat"}
-     *
-     * @param categoryDTO
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/speed", method = RequestMethod.POST, headers = {JSON_API_CONTENT_HEADER})
-    public @ResponseBody
-    ResponseEntity createCategory() throws Exception {
-    	HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-        
-    	long inc = Math.round((Math.random() - 0.5) * 20);
-    	
-    	SpeedDTO speed = new SpeedDTO();
-    	speed.setInc(inc);
-    	
-    	return new ResponseEntity<>(speed, headers, HttpStatus.OK);
-    }
 }

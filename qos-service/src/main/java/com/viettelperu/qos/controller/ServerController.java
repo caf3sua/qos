@@ -6,12 +6,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
+import com.viettelperu.qos.model.entity.SpeedTestHistory;
+import com.viettelperu.qos.util.EncryptionUtil;
 
 /**
  * Server creation and get APIs
@@ -43,5 +46,23 @@ public class ServerController extends BaseController {
         resObj.setCode(200);
         resObj.setResult("OK");
         return new ResponseEntity<>(resObj, headers, HttpStatus.OK);
+    }
+    
+    /**
+     * Method to get the category by given id
+     * GET
+     *
+     * @param catId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/encrypt/{data}", method = RequestMethod.GET)
+    public @ResponseBody
+    APIResponse encrypt(@PathVariable String data) throws Exception {
+    	LOG.debug("START encrypt for data:" + data);
+    	
+    	String dataEncrypt = EncryptionUtil.encrypt(data);
+    	
+        return APIResponse.toOkResponse(dataEncrypt);
     }
 }

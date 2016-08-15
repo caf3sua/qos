@@ -183,5 +183,6 @@ public class SpeedTestHistoryController extends BaseController {
     	// Extend
     	entity.setIpsCountryCode(dto.getIpsCountryCode());
     	entity.setServerCountryCode(dto.getServerCountryCode());
+    	entity.setNetwork(dto.getNetwork());
     }
 }

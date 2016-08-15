@@ -45,7 +45,16 @@ public class SpeedTestHistoryDTO {
 	String ipsCountryCode;
 	String serverCountryCode;
 	String startTimeDisplay;
+	String network;
 	
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		this.network = network;
+	}
+
 	public String getStartTimeDisplay() {
 		if (this.startTime != null) {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

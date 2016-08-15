@@ -75,6 +75,7 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	// Extend
 	private String ipsCountryCode;
 	private String serverCountryCode;
+	private String network;
 	
 	@Column
     public ApplicationType getApplicationType() {
@@ -374,5 +375,14 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	 */
 	public void setSignalStrength(Double signalStrength) {
 		this.signalStrength = signalStrength;
+	}
+
+	@Column
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		this.network = network;
 	}
 }
