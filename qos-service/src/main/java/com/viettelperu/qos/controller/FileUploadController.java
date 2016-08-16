@@ -7,9 +7,10 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,8 @@ import com.viettelperu.qos.util.RandomUtil;
 public class FileUploadController extends BaseController {
     private static Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 
-    private static final String UPLOADS_DIR = "/uploads/";
+    @Autowired
+    private Environment env;
     
     /**
      * Method to get the category by given id
@@ -79,45 +81,6 @@ public class FileUploadController extends BaseController {
     }
     
     /**
-     * Method to get the category by given id
-     * GET
-     *
-     * @param catId
-     * @return
-     * @throws Exception
-     */
-    @SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/downloadJSON", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity downloadJSONFile(HttpServletRequest request, @RequestParam(required = false) Integer n) throws Exception {
-    	// Hard-code
-//    	String filename = RandomUtil.randomFilename() + ".bin";
-//    	String primaryType = "application";
-//    	String subType = "octet-stream";
-    	
-        // No file found based on the supplied filename
-    	int blockSize = 1024;
-        if (n != null) {
-        	blockSize = n;
-        }
-        
-        // Generate the http headers with the file properties
-        //headers.add("content-disposition", "attachment; filename=" + filename);
-
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[blockSize * 1024];
-        random.nextBytes(bytes);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-        headers.add("Content-Length", String.valueOf(bytes.length));
-        headers.add("Accept-Ranges", "bytes");
-        
-//        return APIResponse.toOkResponse(bytes);
-        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
-    }
-
-    /**
      * Method to get the category by given name
      * GET
      *
@@ -134,7 +97,6 @@ public class FileUploadController extends BaseController {
     	// Generate the http headers with the file properties
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Origin", "*");
-//        headers.add("Access-Control-Allow-Credentials", "true");
         headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
         headers.add("Access-Control-Allow-Headers", "accept, content-type, optional-header");
         
@@ -147,27 +109,30 @@ public class FileUploadController extends BaseController {
                 MultipartFile file = request.getFile(uploadedFile);
                 String mimeType = file.getContentType();
                 String filename = file.getOriginalFilename();
-                byte[] bytes = file.getBytes();
                 fileUpload = new FileUploadDTO(filename, mimeType);
 
-                // Save file
-                String realPathtoUploads =  request.getServletContext().getRealPath(UPLOADS_DIR);
-                if(! new File(realPathtoUploads).exists()) {
-                    new File(realPathtoUploads).mkdir();
+                boolean isWriteFile = Boolean.parseBoolean(env.getProperty("write_file_upload"));
+                LOG.info("Key isWriteFile :" + isWriteFile);
+                
+                if (Boolean.TRUE.equals(isWriteFile)) {
+                	// Save file
+                    String realPathtoUploads =  env.getProperty("path_to_upload_dir");
+                    if(! new File(realPathtoUploads).exists()) {
+                        new File(realPathtoUploads).mkdir();
+                    }
+
+                    LOG.info("Save file to realPathtoUploads = {}", realPathtoUploads);
+
+                    String orgName = file.getOriginalFilename();
+                    String filePath = realPathtoUploads + File.separator + orgName;
+                    File dest = new File(filePath);
+                    file.transferTo(dest);
                 }
-
-                LOG.info("Save file to realPathtoUploads = {}", realPathtoUploads);
-
-                String orgName = file.getOriginalFilename();
-                String filePath = realPathtoUploads + File.separator + orgName;
-//                File dest = new File(filePath);
-//                file.transferTo(dest);
             }
         }
         catch (Exception e) {
         	return new ResponseEntity<>(fileUpload, headers, HttpStatus.NOT_FOUND);
         }
-//        return APIResponse.toOkResponse(fileUpload);
         return new ResponseEntity<>(fileUpload, headers, HttpStatus.OK);
     }
 }

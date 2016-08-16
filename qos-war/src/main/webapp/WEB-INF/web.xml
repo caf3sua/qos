@@ -60,16 +60,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <!-- Upload servlet -->
-    <servlet>
-		<servlet-name>file_upload</servlet-name>
-		<servlet-class>com.viettelperu.qos.servlet.FileUploadServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>file_upload</servlet-name>
-		<url-pattern>/app/upload</url-pattern>
-	</servlet-mapping>
-
     <!-- Servlet Configurations -->
     <!-- Spring Servlet for WebApp -->
     <servlet>

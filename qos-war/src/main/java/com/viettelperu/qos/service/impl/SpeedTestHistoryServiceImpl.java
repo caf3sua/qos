@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.viettelperu.qos.framework.data.BaseJPAServiceImpl;
 import com.viettelperu.qos.framework.exception.NotFoundException;
 import com.viettelperu.qos.model.dto.SearchCriteriaDTO;
-import com.viettelperu.qos.model.entity.Category;
 import com.viettelperu.qos.model.entity.SpeedTestHistory;
 import com.viettelperu.qos.model.repository.SpeedTestHistoryRepository;
 import com.viettelperu.qos.service.SpeedTestHistoryService;
