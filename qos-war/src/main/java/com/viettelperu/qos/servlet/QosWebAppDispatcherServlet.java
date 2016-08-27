@@ -1,5 +1,7 @@
 package com.viettelperu.qos.servlet;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
 import com.viettelperu.qos.framework.servlet.BaseDispatcherServlet;
 

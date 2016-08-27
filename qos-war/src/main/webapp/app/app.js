@@ -25,8 +25,8 @@ var BlurAdmin = angular.module('BlurAdmin', [
   'BlurAdmin.common'
 ]);
 
-BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', 'baSidebarService',
-   function ($rootScope, $timeout, $location, $cookieStore, $http, baSidebarService) {
+BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', 'baSidebarService', 'BackendCfg',
+   function ($rootScope, $timeout, $location, $cookieStore, $http, baSidebarService, BackendCfg) {
        // keep user logged in after page refresh
        $rootScope.globals = $cookieStore.get('globals') || {};
        if ($rootScope.globals.currentUser) {
@@ -52,7 +52,14 @@ BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', '
        $rootScope.selectedServer = $cookieStore.get('selectedServer');
        if ($rootScope.selectedServer == undefined) {
 		  // default server
-		  $rootScope.selectedServer = {serverId : 0, name : "[PE] Hanoi - 1 Gb/s - Bitel", ipAddress: "127.0.0.1", priority: 0, status: "online", url : "http://localhost:8080/qos"};
+    	   $http.get(BackendCfg.contextPath(location) + 'api/server/getDefaultServerInfo' + '?rnd=' + (new Date().getTime()))
+    	   .then(function(result) {
+    		   console.log(result.data.result);
+    		   $rootScope.selectedServer = result.data.result;
+    		   $cookieStore.put('selectedServer', $rootScope.selectedServer);
+	   		}, function(e) {
+	   			console.log("error");
+	   		});
        }
        
        $rootScope.isSubmitted = false;

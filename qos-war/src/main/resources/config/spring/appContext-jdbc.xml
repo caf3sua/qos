@@ -8,9 +8,9 @@
     <!-- Configuring the data source bean for the entire system -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${jdbc.driverClass}"/>
-        <property name="jdbcUrl" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.jdbcUrl}')}"/>
-        <property name="user" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.user}')}"/>
-        <property name="password" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.password}')}"/>
+        <property name="jdbcUrl" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.jdbcUrl}', '${mode_enable_encrypt}')}"/>
+        <property name="user" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.user}', '${mode_enable_encrypt}')}"/>
+        <property name="password" value="#{T(com.viettelperu.qos.util.EncryptionUtil).decrypt('${jdbc.password}', '${mode_enable_encrypt}')}"/>
         <property name="preferredTestQuery" value="SELECT 1"/>
 
         <property name="minPoolSize" value="5" />

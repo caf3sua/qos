@@ -159,9 +159,6 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 		broadcastData.latency = $scope.latencyGraphConfig.series[0].data;
 		broadcastData.upload = $scope.graphConfig.series[1].data;
 		
-		console.log($scope.graphConfig.series[0]);
-		console.log($scope.graphConfig.series[1]);
-		
 		sharedService.prepForBroadcast(2 , 'Speed Test done', broadcastData);
 		
 		// Stop uploading if any
@@ -301,7 +298,6 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
                     
           		  	// Check upload time to terminate
           		  	$timeout(function () {
-          		  		console.log('$timeout after download: ' + MAX_DURATION_TEST/2);
           		  		//Cancel the Timer .
           		        if (angular.isDefined(promise)) {
           		        	$interval.cancel(promise);
@@ -312,7 +308,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         		        }
           		        
 	          			if (dReq && dReq.readyState != 4) {
-	          				console.log('-----abort xhr-----');
+	          				console.log('-----abort download xhr-----');
 	          				dReq.abort();
 	          			}
 	          			isBusy = false;

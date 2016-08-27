@@ -10,6 +10,7 @@
 		<module>qos-war</module>
 		<module>qos-ws-client</module>
 		<module>qos-service</module>
+		<module>qos-util</module>
 	</modules>
 	
 	<build>

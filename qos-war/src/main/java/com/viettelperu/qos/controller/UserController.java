@@ -67,6 +67,7 @@ public class UserController extends BaseController {
     @Autowired
     private Environment env;
     
+    /** Used to get bean */
     @Autowired
     private ApplicationContext _applicationContext;
     /**
@@ -126,11 +127,14 @@ public class UserController extends BaseController {
             	throw new AuthenticationFailedException("Cannot find ISDN by IpAddress");
             }
         } else {
+        	// Check mode encrypt
+        	String modeEncrypt = env.getProperty("mode_enable_encrypt");
+            LOG.debug("Mode encrypt :" + modeEncrypt);
 	        // Get wsUsername/wsPassword
 	    	String wsUsernameEncrypted = env.getProperty("wsUsername_getMSISDN");
-	    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+	    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted, modeEncrypt);
 	    	String wsPasswordEncrypted = env.getProperty("wsPassword_getMSISDN");
-	    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+	    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted, modeEncrypt);
 	        GetMSISDNResponse responseSoap = qosWebService.getMSISDN(wsUsername, wsPassword, userDTO.getIp());
 	        
 	        // Get information
@@ -164,11 +168,14 @@ public class UserController extends BaseController {
 
         LOG.info("checkSubExistsActive for ISDN: " + userDTO.getIsdn());
         
+    	// Check mode encrypt
+    	String modeEncrypt = env.getProperty("mode_enable_encrypt");
+        LOG.debug("Mode encrypt :" + modeEncrypt);
         // Get wsUsername/wsPassword
     	String wsUsernameEncrypted = env.getProperty("wsUsername_checkSubExistsActive");
-    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted, modeEncrypt);
     	String wsPasswordEncrypted = env.getProperty("wsPassword_checkSubExistsActive");
-    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted, modeEncrypt);
         
     	LOG.info("Looking for user by ISDN: " + userDTO.getIsdn());
     	CheckSubExistsActiveResponse responseSoap = qosWebService.checkSubExistsActive(wsUsername, wsPassword, userDTO.getIsdn());
@@ -188,11 +195,15 @@ public class UserController extends BaseController {
                                                   HttpServletRequest request, HttpServletResponse response) throws Exception {
     	Validate.isTrue(StringUtils.isNotBlank(userDTO.getIsdn()), "Username/phone is blank");
 
+    	// Check mode encrypt
+    	String modeEncrypt = env.getProperty("mode_enable_encrypt");
+        LOG.debug("Mode encrypt :" + modeEncrypt);
+        
     	// Get wsUsername/wsPassword
     	String wsUsernameEncrypted = env.getProperty("wsUsername_viewSubscriberByIsdn");
-    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted);
+    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted, modeEncrypt);
     	String wsPasswordEncrypted = env.getProperty("wsPassword_viewSubscriberByIsdn");
-    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted);
+    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted, modeEncrypt);
     	
         LOG.info("Looking for user by ISDN: " + userDTO.getIsdn());
         ViewSubscriberByIsdnResponse responseSoap = qosWebService.viewSubscriberByIsdn(wsUsername, wsPassword, userDTO.getIsdn());
@@ -239,7 +250,6 @@ public class UserController extends BaseController {
         createAuthResponse(user, authResp);
 
         return APIResponse.toOkResponse(authResp);
-//        return APIResponse.toErrorResponse("This function is not available now");
     }
 
     private void createAuthResponse(User user, HashMap<String, Object> authResp) {

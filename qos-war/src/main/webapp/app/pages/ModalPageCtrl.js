@@ -44,8 +44,10 @@ function GeoLocationPageCtrl($scope, $rootScope, $http, BackendCfg, CommonServic
         // init
 		//BackendCfg.setupHttp($http);
 		CommonService.getLocation(function(result) {
-			$scope.geoLocation = result;
-			$rootScope.geoLocation = result;
+			$scope.$apply(function(){
+				$scope.geoLocation = result;
+				$rootScope.geoLocation = result;
+			});
 		});
     })();
 };

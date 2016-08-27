@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +37,7 @@ import com.viettelperu.qos.util.RandomUtil;
  */
 @Controller
 @RequestMapping("file")
+@PropertySources(@PropertySource("classpath:config.properties"))
 public class FileUploadController extends BaseController {
     private static Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.viettelperu.qos.framework.api.APIResponse;
 import com.viettelperu.qos.framework.controller.BaseController;
-import com.viettelperu.qos.model.dto.ServerDTO;
+import com.viettelperu.qos.model.entity.Server;
 import com.viettelperu.qos.service.ServerService;
 
 /**
@@ -54,19 +53,30 @@ public class ServerController extends BaseController {
     public @ResponseBody
     APIResponse getAllServerInfo() throws Exception {
     	LOG.info("getAllServerInfo");
-//    	List<Server> servers = serverService.findAll();
-        List<ServerDTO> servers = new ArrayList<>();
-        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "localhost"
-        		, 0, "online", "VN", "http://localhost:8080/qos-service");
-        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.71.224.225"
-        		, 1, "online", "VN", "http://118.71.224.225:8080/qos");
-        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3"
-        		, 2, "offline", "PE", "http://192.168.1.3");
-        servers.add(s1);
-        servers.add(s2);
-        servers.add(s3);
+    	List<Server> servers = serverService.findAll();
+//        List<ServerDTO> servers = new ArrayList<>();
+//        ServerDTO s1 = new ServerDTO(0l, "[PE] Hanoi Local - 1 Gb/s - Bitel", "localhost"
+//        		, 0, "online", "VN", "http://localhost:8080/qos-service");
+//        ServerDTO s2 = new ServerDTO(1l, "[PE] Hanoi Itsol - 1 Gb/s - Bitel", "118.71.224.225"
+//        		, 1, "online", "VN", "http://118.71.224.225:8080/qos");
+//        ServerDTO s3 = new ServerDTO(2l, "[PE] Lima - 1 Gb/s - Bitel", "192.168.1.3"
+//        		, 2, "offline", "PE", "http://192.168.1.3");
+//        servers.add(s1);
+//        servers.add(s2);
+//        servers.add(s3);
         
         return APIResponse.toOkResponse(servers);
+    }
+    
+    @RequestMapping(value = "/getDefaultServerInfo", method = RequestMethod.GET)
+    public @ResponseBody
+    APIResponse getDefaultServerInfo() throws Exception {
+    	LOG.info("getDefaultServerInfo");
+    	List<Server> servers = serverService.findAll();
+    	if (null != servers && servers.size() > 0) {
+    		return APIResponse.toOkResponse(servers.get(0));
+    	}
+        return APIResponse.toErrorResponse("Cannot get default server");
     }
     
     /**
@@ -128,7 +138,6 @@ public class ServerController extends BaseController {
     	
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet("http://ip-api.com/json/" + ipAddress);
-//		httpGet.addHeader("User-Agent", USER_AGENT);
 		CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(

@@ -80,7 +80,6 @@ function normalizedDataPoint(latPoint, point, unitType) {
 	
 	// Get latest point
 	var delta = Math.abs(latPoint[1] - point[1]);
-	console.log('delta:' + delta);
 	
 	if ((delta > diff) && (latPoint[1] > point[1])) {
 		point[1] = latPoint[1] - diff;
