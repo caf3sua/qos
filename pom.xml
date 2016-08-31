@@ -99,16 +99,21 @@
 						-->
 						<schemaLanguage>WSDL</schemaLanguage>
 						<generatePackage>com.viettelperu.qos.ws.wsdl.radius</generatePackage>
+						<schemaDirectory>src/main/resources</schemaDirectory>
+						<schemaIncludes>
+		                   <include>Radius.wsdl</include>
+		               </schemaIncludes>
+						
+						<!-- 
 						<schemas>
 							<schema>
 								<url>http://10.121.5.4:8305/RadiusGW/Radius?wsdl</url>
-								<!-- 
 								http://10.121.5.4:8305/RadiusGW/Radius?wsdl
 								http://10.121.4.61:8046/VAS_CM_WS/SubscriberBusinessWS?wsdl
 								<url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
-								 -->
 							</schema>
 						</schemas>
+						 -->
 					</configuration>
 				</plugin>
 			</plugins>

@@ -5,12 +5,15 @@ package com.viettelperu.qos.ws.wsdl.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 import com.viettelperu.qos.ws.wsdl.radius.GetMSISDN;
 import com.viettelperu.qos.ws.wsdl.radius.GetMSISDNResponse;
 import com.viettelperu.qos.ws.wsdl.radius.ResultResponse;
+import com.viettelperu.qos.ws.wsdl.util.LogbackInterceptor;
 import com.viettelperu.qos.ws.wsdl.util.WsConstants;
 
 /**
@@ -60,7 +63,11 @@ public class RadiusClient extends WebServiceGatewaySupport {
 		request.setPassword(wsPassword);
 		request.setIp(ip);
 		
-		GetMSISDNResponse response = (GetMSISDNResponse) getWebServiceTemplate()
+		WebServiceTemplate webServiceTemplate = getWebServiceTemplate();
+		ClientInterceptor[] interceptors = new ClientInterceptor[1];
+		interceptors[0] = new LogbackInterceptor();
+		webServiceTemplate.setInterceptors(interceptors);
+		GetMSISDNResponse response = (GetMSISDNResponse) webServiceTemplate
 				.marshalSendAndReceive(
 						this.getDefaultUri(),
 						request,

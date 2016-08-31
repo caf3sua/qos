@@ -13,9 +13,7 @@
 	<artifactId>qos-war</artifactId>
 	<packaging>war</packaging>
 	<name>qos-war</name>
-	<version>1.0.0</version>
-
-    <dependencies>
+	<dependencies>
         <!-- Java EE 7 -->
         <dependency>
             <groupId>javax</groupId>

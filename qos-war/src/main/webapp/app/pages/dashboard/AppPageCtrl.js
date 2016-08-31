@@ -70,6 +70,9 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
             	// Kbps
             	$scope.speedConfig.yAxis.title.text = 'Kbps';
             	$scope.speedConfig.yAxis.max = 100 * MBPS_TO_KBPS;
+            	$scope.speedConfig.yAxis.tickPositions = [0, 10 * MBPS_TO_KBPS, 20 * MBPS_TO_KBPS , 30 * MBPS_TO_KBPS , 40 * MBPS_TO_KBPS 
+            	              	                        , 50 * MBPS_TO_KBPS , 60 * MBPS_TO_KBPS , 70 * MBPS_TO_KBPS , 80 * MBPS_TO_KBPS 
+            	            	                        , 90 * MBPS_TO_KBPS , 100 * MBPS_TO_KBPS ];
             	$scope.speedConfig.yAxis.plotBands[0].to = 40 * MBPS_TO_KBPS;
             	$scope.speedConfig.yAxis.plotBands[1].from = 40 * MBPS_TO_KBPS;
             	$scope.speedConfig.yAxis.plotBands[1].to = 80 * MBPS_TO_KBPS;
@@ -81,6 +84,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
             	$scope.unitType = 1;
             	$scope.speedConfig.yAxis.title.text = 'Mbps';
             	$scope.speedConfig.yAxis.max = 100;
+            	$scope.speedConfig.yAxis.tickPositions = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
             	$scope.speedConfig.yAxis.plotBands[0].to = 40;
             	$scope.speedConfig.yAxis.plotBands[1].from = 40;
             	$scope.speedConfig.yAxis.plotBands[1].to = 80;

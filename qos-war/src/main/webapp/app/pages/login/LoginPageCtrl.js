@@ -31,6 +31,7 @@
 	                lc.dataLoading = false;
 	                $rootScope.isSubmitted = false;
 	                $location.path('/home');
+	                $window.location.reload();
 	            } else {
 	                lc.error = response.result;
 	                lc.details = response.details;

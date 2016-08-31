@@ -45,24 +45,27 @@ var speedConfig = {
 	    yAxis: {
 	        min: 0,
 	        max: 100,
-	        
+	        tickPositions: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+//	        tickPositions: [0, 10 * MBPS_TO_KBPS, 20 * MBPS_TO_KBPS , 30 * MBPS_TO_KBPS , 40 * MBPS_TO_KBPS 
+//	                        , 50 * MBPS_TO_KBPS , 60 * MBPS_TO_KBPS , 70 * MBPS_TO_KBPS , 80 * MBPS_TO_KBPS 
+//	                        , 90 * MBPS_TO_KBPS , 100 * MBPS_TO_KBPS ],
 	        minorTickInterval: 'auto',
 	        minorTickWidth: 1,
 	        minorTickLength: 10,
-	        minorTickPosition: 'inside',
+	        //minorTickPosition: 'outside',
 	        //minorTickColor: '#666',
 	        minorTickColor: '#c4c4c4',
 
 	        tickPixelInterval: 30,
 	        tickWidth: 2,
-	        tickPosition: 'inside',
+	        //tickPosition: 'inside',
 	        tickLength: 15,
 	        //tickColor: '#666',
 	        tickColor: '#c4c4c4',
 	        labels: {
-	            step: 2,
-	            rotation: 'auto',
-	            //distance: 10,
+	            //step: 2,
+	            //rotation: 'auto',
+	            distance: -25,
 	        },
 	        title: {
 	            text: 'Mbps'

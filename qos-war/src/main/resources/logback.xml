@@ -9,9 +9,29 @@
         <file>log/qos-webapp.log</file>
 
         <layout class="ch.qos.logback.classic.PatternLayout">
-          <Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</Pattern>
+          <Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg %n</Pattern>
         </layout>
-      </appender>
+    </appender>
+
+    <appender name="wsDailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/qos-ws.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>qos-ws.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>         
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg %n</Pattern>
+        </encoder>      
+    </appender>
+    
+    <logger name="com.viettelperu.qos.ws.wsdl.util" additivity="false">
+            <level value="debug" />
+            <appender-ref ref="wsDailyRollingFileAppender"/>
+            <appender-ref ref="STDOUT" />
+    </logger>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
