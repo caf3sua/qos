@@ -8,12 +8,14 @@ import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.WebServiceClientException;
@@ -23,10 +25,14 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import com.viettelperu.qos.ws.wsdl.radius.ResultResponse;
+
 public class LogbackInterceptor implements ClientInterceptor {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogbackInterceptor.class);
 
+	private ResultResponse result;
+	
 	public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
 		OutputStream out = new ByteArrayOutputStream();
 		try {
@@ -49,12 +55,35 @@ public class LogbackInterceptor implements ClientInterceptor {
 			if (messageContext.getResponse() instanceof SaajSoapMessage) {
 				((SaajSoapMessage) messageContext.getResponse()).writeTo(out);
 				logger.debug("Received response [" + formatXml(out.toString()) + "]");
+				
+				ResultResponse result = parseResult(out.toString());
+				setResult(result);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return true;
 	}
+	
+	/**
+    *
+    * @param response
+    * @return
+    * @throws SOAPException
+    */
+   private ResultResponse parseResult(String response) {
+	   ResultResponse result = new ResultResponse();
+	   try {
+		   String code = StringUtils.substringBetween(response, "<code>", "</code>");
+		   String desc = StringUtils.substringBetween(response, "<desc>", "</desc>");
+		   result.setCode(Integer.valueOf(code));
+		   result.setDesc(desc);
+       } catch (Exception ex) {
+    	   ex.printStackTrace();
+           logger.error("message not return, try with message");
+       }
+       return result;
+   }
 
 	@Override
 	public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
@@ -88,5 +117,13 @@ public class LogbackInterceptor implements ClientInterceptor {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public ResultResponse getResult() {
+		return result;
+	}
+
+	public void setResult(ResultResponse result) {
+		this.result = result;
 	}
 }

@@ -7,13 +7,14 @@
  * http://jsfiddle.net/r8d3jnx6/1/ -> custom label
  * http://jsfiddle.net/xhfgzfps/1/
  */
-var GRAPH_HEIGHT = 200;
+var GRAPH_HEIGHT = 170;
 var COLOR_DOWNLOAD = '#6AA4D9';
 var COLOR_UPLOAD = '#ED7D31';
 var COLOR_LATENCY = '#A5A5A5';
 
 var speedConfig = {
 		options: {
+			exporting: { enabled: false },
 	        chart: {
 	            type: 'gauge',
 	            plotBackgroundColor: null,
@@ -57,7 +58,7 @@ var speedConfig = {
 	        minorTickColor: '#c4c4c4',
 
 	        tickPixelInterval: 30,
-	        tickWidth: 2,
+	        tickWidth: 5,
 	        //tickPosition: 'inside',
 	        tickLength: 15,
 	        //tickColor: '#666',
@@ -65,7 +66,9 @@ var speedConfig = {
 	        labels: {
 	            //step: 2,
 	            //rotation: 'auto',
-	            distance: -25,
+                style: {
+                    fontSize: "14px"
+                }
 	        },
 	        title: {
 	            text: 'Mbps'
@@ -96,9 +99,9 @@ var speedConfig = {
 //                backgroundColor: "rgba(244,109,67, 0.7)",
 //                borderWidth: 1,
                 borderColor: null,
-//                style: {
-//                    fontSize: "30px"
-//                },
+                style: {
+                    fontSize: "20px"
+                },
 //                color: "white",
                 crop: false,
                 overflow: "none",
@@ -130,6 +133,7 @@ var speedConfig = {
 
 var graphConfig = {
     options: {
+    	exporting: { enabled: false },
         chart: {
             type: 'spline',
             marginRight: 10,
@@ -138,13 +142,6 @@ var graphConfig = {
         	height: GRAPH_HEIGHT
         },
         credits: false,
-//        tooltip: {
-//            shared: true,
-//            formatter: function(){
-//                return 'aaaa';
-//            },
-//            useHtml: true
-//        },
     },
     series: [{
     	name: 'Download',
@@ -154,12 +151,7 @@ var graphConfig = {
         },
         color: '#3747F0',
         tooltip: {
-//        	dateTimeLabelFormats: {
-//                hour: '%S.%L'
-//            },
         	xDateFormat: '%M:%S.%L',
-//        	headerFormat: 'Time: {point.x:%S.%L}</br>',//Highcharts.dateFormat('%S.%L', point.x),
-//            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
         	useHTML: false,
         	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
             shared: true
@@ -186,25 +178,102 @@ var graphConfig = {
         labels: {
             enabled:false
         }
-//	    dateTimeLabelFormats: { // don't display the dummy year
-//	        month: '%e. %b',
-//	        year: '%b'
-//	    },
-//	    title: {
-//	        text: 'Date'
-//	    }
     },
     yAxis: {
         title: {
             text: 'Mbps'
         },
-//        min: 1,
-//    	max: 100,
     },
 };
 
+var downloadGraphConfig = {
+	    options: {
+	    	exporting: { enabled: false },
+	        chart: {
+	            type: 'spline',
+	            marginRight: 10,
+	            // Explicitly tell the width and height of a chart
+	        	width: null,
+	        	height: GRAPH_HEIGHT
+	        },
+	        credits: false,
+	    },
+	    series: [{
+	    	name: 'Download',
+	        data: [],
+	        marker: {
+	            enabled: false
+	        },
+	        color: '#3747F0',
+	        tooltip: {
+	        	xDateFormat: '%M:%S.%L',
+	        	useHTML: false,
+	        	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
+	            shared: true
+	        },
+	    }],
+	    title: {
+	        text: 'Download'
+	    },
+	    xAxis: {
+	        type: 'datetime',
+	        labels: {
+	            enabled:false
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Mbps'
+	        },
+	    },
+	};
+
+var uploadGraphConfig = {
+	    options: {
+	    	exporting: { enabled: false },
+	        chart: {
+	            type: 'spline',
+	            marginRight: 10,
+	            // Explicitly tell the width and height of a chart
+	        	width: null,
+	        	height: GRAPH_HEIGHT
+	        },
+	        credits: false,
+	    },
+	    series: [
+	    {
+	    	name: 'Upload',
+	        data: [],
+	        marker: {
+	            enabled: false
+	        },
+	        tooltip: {
+	        	xDateFormat: '%M:%S.%L',
+	        	useHTML: true,
+	        	pointFormat : '{series.name}: <b>{point.y:.2f}</b>',
+	            shared: true
+	        },
+	    }],
+	    title: {
+	        text: 'Upload'
+	    },
+	    xAxis: {
+	        type: 'datetime',
+	        labels: {
+	            enabled:false
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Mbps'
+	        },
+	    },
+	};
+
+
 var latencyGraphConfig = {
     options: {
+    	exporting: { enabled: false },
         chart: {
             type: 'column',
             marginRight: 10,
@@ -253,6 +322,7 @@ var latencyGraphConfig = {
 
 var graphHistoryConfigMbps = {
         options: {
+        	exporting: { enabled: false },
             chart: {
                 zoomType: 'xy'
             },
@@ -336,6 +406,7 @@ var graphHistoryConfigMbps = {
 
 var graphHistoryConfigKbps = {
         options: {
+        	exporting: { enabled: false },
             chart: {
                 zoomType: 'xy'
             },

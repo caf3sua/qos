@@ -82,7 +82,7 @@ function measureUpload() {
 	intervalUpdateResultToParent = setInterval(updateResultToParent, UPLOAD_TIME_SLEEP);
 
 	// Check upload time to terminate
-	setTimeout(terminateUpload, DURATION_UPLOAD + 100);
+	setTimeout(terminateUpload, DURATION_UPLOAD + 500);
 }
 
 function updateResultToParent() {

@@ -9,27 +9,33 @@ import javax.persistence.Table;
 
 import com.viettelperu.qos.framework.data.JPAEntity;
 
+
 /**
  * Speed Test History Entity
  *
  * @author Nam, Nguyen Hoai <namnh@itsol.vn>
  */
 @Entity
-@Table(name = "QOS_SPEEDTESTHISTORY", indexes = {  @Index(name="userName_idx", columnList = "user_name"),
+@Table(name = "QOS_SPEEDTEST_HISTORY", indexes = {  @Index(name="userName_idx", columnList = "user_name"),
         @Index(name="serverName_idx", columnList = "server_name")})
 public class SpeedTestHistory extends JPAEntity<Long> {
+	// 1: Android, 2: iOs, 3:website
 	public enum ApplicationType {
-		FTTH,
-		Mobile,
+		Unknow,
 		Android,
-		iOS
+		iOS,
+		Website
     }
 	
 	public enum NetworkTechnology {
-		UMTS,
-		LTE,
+		CELL_3G,
+		CELL_4G,
 		WIFI,
-		WWAN
+		ETHERNET,
+		CELL_2G,
+		CELL,
+		NONE,
+		UNKNOWN
     }
 
 	public enum SignalStrength {
@@ -40,10 +46,9 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 
 	private ApplicationType applicationType;
 	private String serverName;
-	private String ips;
+	private String isp;
 	private Date startTime;
 	private Date endTime;
-	private Double duration;
 	private String ipAddress;
 	/** Username login or Phone number */
 	private String userName;
@@ -51,6 +56,7 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	private String province;
 	private String district;
 	private String address;
+	// Luu du lieu o dang bit per second
 	private Double downloadSpeed;
 	private Double maxDownloadSpeed;
 	private Double uploadSpeed;
@@ -73,9 +79,22 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	private SignalStrength signalStrengthUnit;
 	private Double signalStrength;
 	// Extend
-	private String ipsCountryCode;
+	private String ispCountryCode;
 	private String serverCountryCode;
 	private String network;
+	
+	private String rnc;
+	private String snr;
+	private String psc;
+	private String ecno;
+	private String imsi;
+	private String imei;
+	private String brand;
+	private String deviceModel;
+	/**  The Absolute Radio Frequency Channel Number */
+	private String arfcn;
+	private String rscp;
+	private String ecdno;
 	
 	@Column
     public ApplicationType getApplicationType() {
@@ -96,12 +115,12 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 	}
 
 	@Column
-	public String getIps() {
-		return ips;
+	public String getIsp() {
+		return isp;
 	}
 
-	public void setIps(String ips) {
-		this.ips = ips;
+	public void setIsp(String isp) {
+		this.isp = isp;
 	}
 
 	@Column
@@ -120,15 +139,6 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
-	}
-
-	@Column
-	public Double getDuration() {
-		return duration;
-	}
-
-	public void setDuration(Double duration) {
-		this.duration = duration;
 	}
 
 	@Column
@@ -330,12 +340,12 @@ public class SpeedTestHistory extends JPAEntity<Long> {
     }
 
     @Column
-	public String getIpsCountryCode() {
-		return ipsCountryCode;
+	public String getIspCountryCode() {
+		return ispCountryCode;
 	}
 
-	public void setIpsCountryCode(String ipsCountryCode) {
-		this.ipsCountryCode = ipsCountryCode;
+	public void setIspCountryCode(String ispCountryCode) {
+		this.ispCountryCode = ispCountryCode;
 	}
 
 	@Column
@@ -384,5 +394,131 @@ public class SpeedTestHistory extends JPAEntity<Long> {
 
 	public void setNetwork(String network) {
 		this.network = network;
+	}
+
+	@Column
+	public String getRnc() {
+		return rnc;
+	}
+
+	@Column
+	public String getSnr() {
+		return snr;
+	}
+
+	@Column
+	public String getPsc() {
+		return psc;
+	}
+
+	@Column
+	public String getEcno() {
+		return ecno;
+	}
+
+	@Column
+	public String getImsi() {
+		return imsi;
+	}
+
+	@Column
+	public String getImei() {
+		return imei;
+	}
+
+	@Column
+	public String getBrand() {
+		return brand;
+	}
+
+	@Column
+	public String getDeviceModel() {
+		return deviceModel;
+	}
+
+	@Column
+	public String getArfcn() {
+		return arfcn;
+	}
+
+	/**
+	 * @param rnc the rnc to set
+	 */
+	public void setRnc(String rnc) {
+		this.rnc = rnc;
+	}
+
+	/**
+	 * @param snr the snr to set
+	 */
+	public void setSnr(String snr) {
+		this.snr = snr;
+	}
+
+	/**
+	 * @param psc the psc to set
+	 */
+	public void setPsc(String psc) {
+		this.psc = psc;
+	}
+
+	/**
+	 * @param ecno the ecno to set
+	 */
+	public void setEcno(String ecno) {
+		this.ecno = ecno;
+	}
+
+	/**
+	 * @param imsi the imsi to set
+	 */
+	public void setImsi(String imsi) {
+		this.imsi = imsi;
+	}
+
+	/**
+	 * @param imei the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	/**
+	 * @param brand the brand to set
+	 */
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	/**
+	 * @param deviceModel the deviceModel to set
+	 */
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+
+	/**
+	 * @param arfcn the arfcn to set
+	 */
+	public void setArfcn(String arfcn) {
+		this.arfcn = arfcn;
+	}
+
+	@Column
+	public String getRscp() {
+		return rscp;
+	}
+
+	public void setRscp(String rscp) {
+		this.rscp = rscp;
+	}
+
+	@Column
+	public String getEcdno() {
+		return ecdno;
+	}
+
+	public void setEcdno(String ecdno) {
+		this.ecdno = ecdno;
 	}
 }

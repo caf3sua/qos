@@ -10,22 +10,26 @@
   <table id="history-table" class="table history-table" st-table="dataTableInit" st-safe-src="dataTable">
     <thead>
     <tr class="sortable ">
-      <th class="table-id" st-sort="id" st-sort-default="false"><i class="fa fa-list-ol" aria-hidden="true"></i></th>
+      <th class="table-id" st-sort="rowId" st-sort-default="false"><i class="fa fa-list-ol" aria-hidden="true"></i></th>
       <th st-sort="date"><i class="fa fa-calendar" aria-hidden="true"></i> Date</th>
-      <th st-sort="ips"><i class="fa fa-globe" aria-hidden="true"></i> IPS</th>
-      <th st-sort="server"><i class="fa fa-server" aria-hidden="true"></i> Server</th>
-      <th st-sort="download"><i class="fa fa-cloud-download" aria-hidden="true"></i> Download</th>
-      <th st-sort="upload"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</th>
+      <th st-sort="isp"><i class="fa fa-globe" aria-hidden="true"></i> ISP</th>
+      <th st-sort="serverName"><i class="fa fa-server" aria-hidden="true"></i> Server</th>
+      <th st-sort="downloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> Download</th>
+      <th st-sort="maxDownloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> Max Download</th>
+      <th st-sort="uploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</th>
+      <th st-sort="maxUploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Max Upload</th>
       <th st-sort="latency"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Latency</th>
       <th>Action</th>
     </tr>
     <tr>
       <th></th>
       <th><input st-search="startTimeDisplay" placeholder="Search Date" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="ips" placeholder="Search IPS" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="isp" placeholder="Search ISP" class="input-sm form-control search-input" type="search"/></th>
       <th><input st-search="serverName" placeholder="Search Server" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="maxDownloadSpeed" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="maxUploadSpeed" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="downloadSpeed" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="maxDownloadSpeed" placeholder="Search Max Download" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="uploadSpeed" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="maxUploadSpeed" placeholder="Search Max Upload" class="input-sm form-control search-input" type="search"/>
       <th><input st-search="latency" placeholder="Search Latency" class="input-sm form-control search-input" type="search"/>
       </th>
       <th></th>
@@ -33,16 +37,20 @@
     </thead>
     <tbody>
     <tr ng-repeat="item in dataTableInit">
-      <td class="table-id line-height-25">{{item.id}}</td>
+      <td class="table-id line-height-25">{{item.rowId}}</td>
       <td class="line-height-25">{{item.startTimeDisplay}}</td>
-      <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.ips}}</td>
-      <td class="line-height-25"><img ng-src="assets/img/country/vietnam.png" width="22px;"> {{item.serverName}}</td>
-      <td class="line-height-25">max: {{item.maxDownloadSpeed}} {{rateUnitDisplay}}</br>avg: {{item.downloadSpeed}} {{rateUnitDisplay}}</td>
-      <td class="line-height-25">max: {{item.maxUploadSpeed}} {{rateUnitDisplay}}</br>avg: {{item.uploadSpeed}} {{rateUnitDisplay}}</td>
+      <td class="line-height-25">{{item.isp}}</td>
+      <td class="line-height-25">{{item.serverName}}</td>
+      <td class="line-height-25">{{item.downloadSpeed}} {{rateUnitDisplay}}</td>
+      <td class="line-height-25">{{item.maxDownloadSpeed}} {{rateUnitDisplay}}</td>
+      <td class="line-height-25">{{item.uploadSpeed}} {{rateUnitDisplay}}</td>
+      <td class="line-height-25">{{item.maxUploadSpeed}} {{rateUnitDisplay}}</td>
       <td class="line-height-25">min: {{item.minLatency}} ms</br>avg: {{item.latency}} ms</td>
       <td class="line-height-25">
       	<a href ng-click="openHistoryDetailModal({{item}})"><i class="fa fa-info-circle" aria-hidden="true" style="font-size: 20px;color: blue;"></i></a>
+      	<!-- 
        	<a href ng-click="openConfirm({{item.id}})"><i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+       	 -->
       </td>
     </tr>
     </tbody>

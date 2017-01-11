@@ -72,7 +72,7 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 		        animation: $scope.animationsEnabled,
 		        templateUrl: 'app/pages/history/historyDetailModal.html',
 		        controller: 'HistoryDetailModalCtrl',
-//		        size: size,
+		        //size: 'lg',
 		        resolve: {
 		        	item: item
 		        }
@@ -166,21 +166,21 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    		if (data.code == 200) {
 	    			$scope.dataTable = data.result;
 	    			for (var i = 0; i < $scope.dataTable.length; i++) {
-	    				if (i >= MAX_GRAPH_ITEM) {
-	    					break;
-	    				}
+//	    				if (i >= MAX_GRAPH_ITEM) {
+//	    					break;
+//	    				}
+	    				// rowid
+	    				$scope.dataTable[i].rowId = i + 1;
 	    				
 	    				// Convert data
 	    				// Kbps
-	    				if ($scope.rateUnit == 0) {
-	    					converRateDisplayData($scope.dataTable[i]);
-	    				}
+    					converRateDisplayData($scope.dataTable[i], $scope.rateUnit);
 	    				
 	    				$scope.graphHistoryConfig.series[1].data.push($scope.dataTable[i].downloadSpeed);
 	    				$scope.graphHistoryConfig.series[2].data.push($scope.dataTable[i].uploadSpeed);
 	    				$scope.graphHistoryConfig.series[0].data.push($scope.dataTable[i].latency);
 	    				
-	    				var date = $filter('date')(new Date($scope.dataTable[i].createdAt), 'MMM dd yyyy');
+	    				var date = $filter('date')(new Date($scope.dataTable[i].startTime), 'dd/MM/yyyy hh:mm:ss');
 	    				$scope.graphHistoryConfig.options.xAxis[0].categories.push(date);
 					}
 	    		} else if (data.code == 404) {
@@ -199,11 +199,31 @@ function ConfirmHistoryModalCtrl($scope, $uibModalInstance, historyId) {
 	    	});
 	    };
 	    
-	    function converRateDisplayData (obj) {
-	    	obj.downloadSpeed = obj.downloadSpeed * MBPS_TO_KBPS;
-	    	obj.uploadSpeed = obj.uploadSpeed * MBPS_TO_KBPS;
-    		obj.maxDownloadSpeed = obj.maxDownloadSpeed * MBPS_TO_KBPS;
-    		obj.maxUploadSpeed = obj.maxUploadSpeed * MBPS_TO_KBPS;
+	    function converRateDisplayData (obj, rateUnit) {
+	    	var rate = 0;
+	    	if (rateUnit == 0) {
+	    		rate = 1000;
+	    	} else {
+	    		rate = 1000000;
+	    	}
+	    	obj.downloadSpeed = obj.downloadSpeed / rate;
+	    	obj.uploadSpeed = obj.uploadSpeed / rate;
+    		obj.maxDownloadSpeed = obj.maxDownloadSpeed / rate;
+    		obj.maxUploadSpeed = obj.maxUploadSpeed / rate;
+    		
+    		// round
+    		// Kbps
+    		if (rateUnit == 0) {
+    			obj.downloadSpeed.toFixed(0);
+    			obj.uploadSpeed.toFixed(0);
+    			obj.maxDownloadSpeed.toFixed(0);
+    			obj.maxUploadSpeed.toFixed(0);
+    		} else {
+    			obj.downloadSpeed.toFixed(2);
+    			obj.uploadSpeed.toFixed(2);
+    			obj.maxDownloadSpeed.toFixed(2);
+    			obj.maxUploadSpeed.toFixed(2);
+    		}
 	    }
 	    
 	    (function initController() {

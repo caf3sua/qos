@@ -2,7 +2,8 @@
 <div class="row">
   <div class="col-xlg-9 col-lg-6 col-md-6 col-sm-12 col-xs-12">
     <div class="row">
-      <div class="col-xlg-8 col-lg-12 col-md-12 col-sm-7 col-xs-12"
+    	<!-- col-xlg-8  col-sm-7 -->
+      <div class="col-lg-12 col-md-12 col-xs-12"
            ba-panel
            ba-panel-title="Speed Test"
            ba-panel-class="medium-panel qos-medium-panel">
@@ -44,6 +45,14 @@
             <highchart id="speedChart" config="speedConfig" class="span10"></highchart>
             <div class="cssload-loader" ng-show="!measuring"></div>
         </div>
+        
+        <!-- Progress bar -->
+         <!-- 
+         <uib-progressbar class="progress-striped active" value="downloadProgress">{{downloadProgress}}% download</uib-progressbar>
+         <uib-progressbar class="progress-striped active" value="uploadProgress" type="success"><b>{{uploadProgress}}%</b> upload</uib-progressbar>
+          -->
+          <uib-progressbar class="progress-striped active" value="downloadProgress"></uib-progressbar>
+         <uib-progressbar class="progress-striped active" value="uploadProgress" type="success"></uib-progressbar>
       </div>
     </div>
   </div>
@@ -57,11 +66,16 @@
     				<img src="assets/img/icon/gps.gif" width="35px;">
     			</a> {{geoLocation.regionName}}, {{geoLocation.country}} {{geoLocation.lat}}°W / {{geoLocation.lon}}°S
     		</span>
+	        <!-- 
 	        <a href="#/setting" class="pull-right" id="setting-link">
 	        	<i class="fa fa-cog" aria-hidden="true"></i>  Setting
-	        </a>
+	        </a> -->
 		</div>
+		<!-- 
 		<highchart id="graphChart" config="graphConfig" class="span10"></highchart>
+		 -->
+		 <highchart id="downloadGraphChart" config="downloadGraphConfig" class="span10"></highchart>
+		 <highchart id="uploadGraphChart" config="uploadGraphConfig" class="span10"></highchart>
 		<highchart id="latencyGraphConfig" config="latencyGraphConfig" class="span10"></highchart>
   </div>
 </div>

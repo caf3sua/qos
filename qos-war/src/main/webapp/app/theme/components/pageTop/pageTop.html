@@ -1,13 +1,15 @@
 <div class="page-top clearfix qos-banner" scroll-position="scrolled" max-height="50" ng-class="{'scrolled': scrolled}">
-  <a href="#/dashboard" class="al-logo clearfix">
+  <a href class="collapse-menu-link ion-navicon" ba-sidebar-toggle-menu></a>
+	
+  <a href="#/dashboard" class="al-logo clearfix" style="margin-left:5px;">
   	<img src="assets/img/logo.png" width="90px;">
   </a>
-  <a href class="collapse-menu-link ion-navicon" ba-sidebar-toggle-menu></a>
 
+	<!-- 
   <div class="search">
     <i class="ion-ios-search-strong" ng-click="startSearch()"></i>
     <input id="searchInput" type="text" placeholder="Search for...">
-  </div>
+  </div> -->
 
   <div class="user-profile clearfix">
   	<ul class="al-msg-center clearfix" ng-if="!currentUser">
@@ -25,8 +27,9 @@
 	      </a>
 	      <ul  class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
 	        <li><i class="dropdown-arr"></i></li>
+	        <!-- 
 	        <li><a href="#/profile"><i class="fa fa-user"></i>Profile</a></li>
-	        <li><a href><i class="fa fa-cog"></i>Settings</a></li>
+	        <li><a href><i class="fa fa-cog"></i>Settings</a></li> -->
 	        <li><a href class="signout" ng-controller="HomePageCtrl as home" ng-click="home.logout()" ><i class="fa fa-power-off"></i>Sign out</a></li>
 	      </ul>
 	    </div>
@@ -34,3 +37,16 @@
     </div>
   </div>
 </div>
+
+<script type="text/ng-template" id="confirmSignoutModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirm Sign out!</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure to delete History record ID#{{historyId}} from system ?</>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()">Delete</button>
+        </div>
+</script>

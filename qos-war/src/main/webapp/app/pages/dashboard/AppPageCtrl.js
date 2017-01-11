@@ -14,10 +14,15 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     $scope.measuringDownload = false;
     $scope.measuringUpload = false;
     
+    // Progress bar
+    $scope.downloadProgress = 0;
+    $scope.uploadProgress = 0;
     
     // store the interval promise in this variable
     var promise;
     var promiseLatency;
+    var promiseDownloadProgress;
+    var promiseUploadProgress;
     // For share broadcast
     $scope.message = '';
     // Broadcast status (-1: Begin , 0: Downloading, 1: Uploading, 2: End)
@@ -35,7 +40,9 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     // Config speed and chart
     $scope.speedConfig = {};
     // Config setup chart
-    $scope.graphConfig = {};
+    //$scope.graphConfig = {};
+    $scope.downloadGraphConfig = {};
+    $scope.uploadGraphConfig = {};
     // Config setup chart latency
     $scope.latencyGraphConfig = {};
     $scope.uploadFrame;
@@ -60,9 +67,11 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         	// Config speed and chart
             $scope.speedConfig = speedConfig;
             // Config setup chart
-            $scope.graphConfig = graphConfig;
+            //$scope.graphConfig = graphConfig;
             // Config setup chart latency
             $scope.latencyGraphConfig = latencyGraphConfig;
+            $scope.downloadGraphConfig = downloadGraphConfig;
+            $scope.uploadGraphConfig = uploadGraphConfig;
             
             // Init unit
             if ($rootScope.bitrateType.id == 0) {
@@ -79,7 +88,9 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
             	$scope.speedConfig.yAxis.plotBands[2].from = 80 * MBPS_TO_KBPS;
             	$scope.speedConfig.yAxis.plotBands[2].to = 100 * MBPS_TO_KBPS;
             	
-            	$scope.graphConfig.yAxis.title.text = 'Kbps';
+            	//$scope.graphConfig.yAxis.title.text = 'Kbps';
+            	$scope.downloadGraphConfig.yAxis.title.text = 'Kbps';
+            	$scope.uploadGraphConfig.yAxis.title.text = 'Kbps';
             } else {
             	$scope.unitType = 1;
             	$scope.speedConfig.yAxis.title.text = 'Mbps';
@@ -91,7 +102,9 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
             	$scope.speedConfig.yAxis.plotBands[2].from = 80;
             	$scope.speedConfig.yAxis.plotBands[2].to = 100;
             	
-            	$scope.graphConfig.yAxis.title.text = 'Mbps';
+            	//$scope.graphConfig.yAxis.title.text = 'Mbps';
+            	$scope.downloadGraphConfig.yAxis.title.text = 'Mbps';
+            	$scope.uploadGraphConfig.yAxis.title.text = 'Mbps';
             }
         }, 500);
         // init
@@ -111,6 +124,14 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         	$interval.cancel(promiseUpload);
         }
         
+        if (angular.isDefined(promiseUploadProgress)) {
+        	$interval.cancel(promiseUploadProgress);
+        }
+        
+        if (angular.isDefined(promiseDownloadProgress)) {
+        	$interval.cancel(promiseDownloadProgress);
+        }
+        
         if (angular.isDefined(promiseUploadData)) {
         	$interval.cancel(promiseUploadData);
         }
@@ -128,8 +149,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     		return;
     	}
     	var data = {};
-    	data.download = $scope.graphConfig.series[0].data;
-        data.upload = $scope.graphConfig.series[1].data;
+    	data.download = $scope.downloadGraphConfig.series[0].data;
+        data.upload = $scope.uploadGraphConfig.series[0].data;
         data.latency = $scope.latencyGraphConfig.series[0].data;
         data.startTime = $scope.startTimeTest;
         data.endTime = $scope.endTimeTest;
@@ -142,7 +163,11 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         
     	CommonService.createHistory(data, function(response) {
         	// Toast inform add success or fail
-        	$scope.openToastHistory('create-history-success');
+    		if (response.data.code == 2001) {
+    			$scope.openToastHistory('history-data-invalid');
+    		} else {
+    			$scope.openToastHistory('create-history-success');
+    		}
     	});
     }
     
@@ -153,6 +178,9 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     app.stopMeasure = function () {
     	console.log('stop measure speed');
     	
+    	$scope.downloadProgress = 100;
+    	$scope.uploadProgress = 100;
+    	
         // cancel
     	app.cancelPromise();
     	
@@ -161,7 +189,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 		// Broadcast item (status: end)
 		var broadcastData = {};
 		broadcastData.latency = $scope.latencyGraphConfig.series[0].data;
-		broadcastData.upload = $scope.graphConfig.series[1].data;
+		broadcastData.upload = $scope.uploadGraphConfig.series[0].data;
 		
 		sharedService.prepForBroadcast(2 , 'Speed Test done', broadcastData);
 		
@@ -190,13 +218,15 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     app.retrieveDownloadData = function() {
     	// Get status and data
         var data = $('#DownloadData').val();
+        console.log('retrieveDownloadData, DownloadData:' + data);
         var time = $('#DownloadTime').val();
         // Push into array
         if (data != "" && parseFloat(data) > 0) {
         	var number = parseFloat(data);
         	var time = parseFloat(time);
         	var point = [time, number];
-        	$scope.graphConfig.series[0].data.push(point);
+        	//$scope.graphConfig.series[0].data.push(point);
+        	$scope.downloadGraphConfig.series[0].data.push(point);
         	
         	var speedNumber = number;
         	if ($scope.unitType == 1 && speedNumber > MAX_BANDWIDTH_MBPS) {
@@ -225,12 +255,13 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         	
         	// normalizedDataPoint
         	var latPoint;
-        	if ($scope.graphConfig.series[1].data.length != 0) {
-        		latPoint = $scope.graphConfig.series[1].data[$scope.graphConfig.series[1].data.length - 1];
+        	//if ($scope.graphConfig.series[1].data.length != 0) {
+        	if ($scope.uploadGraphConfig.series[0].data.length != 0) {
+        		latPoint = $scope.uploadGraphConfig.series[0].data[$scope.uploadGraphConfig.series[0].data.length - 1];
         		point = normalizedDataPoint(latPoint, point, $scope.unitType);
         	}
         	 
-        	$scope.graphConfig.series[1].data.push(point);
+        	$scope.uploadGraphConfig.series[0].data.push(point);
         	
         	var speedNumber = number;
         	if ($scope.unitType == 1 && speedNumber > MAX_BANDWIDTH_MBPS) {
@@ -244,8 +275,10 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     
     app.resetInitData = function() {
     	// reset data
-        $scope.graphConfig.series[0].data = [];
-        $scope.graphConfig.series[1].data = [];
+        //$scope.graphConfig.series[0].data = [];
+        //$scope.graphConfig.series[1].data = [];
+    	$scope.downloadGraphConfig.series[0].data = [];
+    	$scope.uploadGraphConfig.series[0].data = [];
         $scope.latencyGraphConfig.series[0].data = [];
         $scope.speedConfig.series[0].data = [0];
         
@@ -255,9 +288,26 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
         $('#UploadData').val("");
         $('#UploadTime').val("");
         
+        $scope.downloadProgress = 0;
+    	$scope.uploadProgress = 0;
+        
         isBusy = false;
     };
     
+    app.downloadProgress = function () {
+    	if ($scope.downloadProgress + 2 >= 100) {
+    		return;
+    	}
+    	$scope.downloadProgress = $scope.downloadProgress + 2;
+    }
+
+    app.uploadProgress = function () {
+    	if ($scope.uploadProgress + 2 >= 100) {
+    		return;
+    	}
+    	$scope.uploadProgress = $scope.uploadProgress + 2;
+    }
+
     app.startMeasure = function () {
     	console.log('start measure speed');
     	
@@ -297,6 +347,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 
             		// store the interval promise
                     promise = $interval(app.measureDownload, 300);
+                    console.log('progress download time:' + (MAX_DURATION_TEST / 300));
+                    promiseDownloadProgress = $interval(app.downloadProgress, 200);
                     
                     promiseDownloadData = $interval(app.retrieveDownloadData, 200);
                     
@@ -305,6 +357,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
           		  		//Cancel the Timer .
           		        if (angular.isDefined(promise)) {
           		        	$interval.cancel(promise);
+          		        	$scope.downloadProgress = 100;
+          		        	$interval.cancel(promiseDownloadProgress);
           		        }
           		        
           		        if (angular.isDefined(promiseDownloadData)) {
@@ -319,7 +373,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 	          			
 //	          		  	if (!$scope.isAlreadyNotifyUploading) {
           		        // Broad cast to inform end download, start upload
-                    	sharedService.prepForBroadcast(1, 'Uploading ...', $scope.graphConfig.series[0].data);
+                    	sharedService.prepForBroadcast(1, 'Uploading ...', $scope.downloadGraphConfig.series[0].data);
 //	                    	$scope.isAlreadyNotifyUploading = true;
 //	                    }
 	            			
@@ -330,14 +384,16 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 //	            		$scope.statusMeasure = STATUS_UPLOADING;
 	            		promiseUpload = $interval(app.uploadDataCORS, 300);
 	            		promiseUploadData = $interval(app.retrieveUploadData, 200);
-          		  	}, MAX_DURATION_TEST / 2);
+	            		
+	            		promiseUploadProgress = $interval(app.uploadProgress, 200);
+          		  	}, (MAX_DURATION_TEST / 2)); // sleep 2000ms
           		  	
             		promiseLatency = $interval(app.measureLatency, 1000);
             		
             		// STOP stest
             		$timeout(function () {
             			app.stopMeasure();
-          		  	}, MAX_DURATION_TEST + 1000);
+          		  	}, MAX_DURATION_TEST);
         		}
         	});
     	}, 300);
@@ -459,6 +515,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
 	                var durationDownload = (progressDownloadTime - startDownloadTime);
 	                
 	                // Calculate
+	                //var number = calculateBandwidth(downLoaded, durationDownload, $scope.unitType);
 	                var number = calculateBandwidth(downLoaded, durationDownload, $scope.unitType);
 	                
 	                $('#DownloadData').val(number);
@@ -607,7 +664,7 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
             	var toastQuote = $scope.quotesApp[2];
 	      } else if (type == 'history-data-invalid') {
 	    	  var toastType = 'error';
-		      var toastQuote = $scope.quotes[4];
+		      var toastQuote = $scope.quotesApp[4];
 	      }
         // Info
         openedToasts.push(toastr[toastType](toastQuote.message, toastQuote.title, toastQuote.options));
@@ -625,7 +682,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     	console.log('resize');
     	$timeout(function () {
     		$('#speedChart').highcharts().reflow();
-    		$('#graphChart').highcharts().reflow();
+    		$('#downloadGraphChart').highcharts().reflow();
+    		$('#uploadGraphChart').highcharts().reflow();
     		$('#latencyGraphConfig').highcharts().reflow();
     		$scope.$apply();
     	}, 200);
@@ -637,8 +695,8 @@ function AppPageCtrl($location, $scope, $rootScope, AppService, $timeout, $inter
     	
         // reset data
         $scope.measuring = false;
-        $scope.graphConfig.series[0].data = [];
-        $scope.graphConfig.series[1].data = [];
+        $scope.downloadGraphConfig.series[0].data = [];
+        $scope.uploadGraphConfig.series[0].data = [];
         $scope.latencyGraphConfig.series[0].data = [];
         $scope.speedConfig.series[0].data = [0];
     });

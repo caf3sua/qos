@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 /**
  *
  * {"name":"cat1", "priority":2, "parent":"pCat"}
@@ -14,7 +16,7 @@ public class SpeedTestHistoryDTO {
 	Long id;
 	String applicationType;
 	String serverName;
-	String ips;
+	String isp;
 	Date startTime;
 	Date endTime;
 	Double duration;
@@ -42,11 +44,150 @@ public class SpeedTestHistoryDTO {
 	String signalStrengthUnit;
 	Double signalStrength;
 	// Extend
-	String ipsCountryCode;
+	String ispCountryCode;
 	String serverCountryCode;
 	String startTimeDisplay;
 	String network;
 	
+	private String rnc;
+	private String snr;
+	private String psc;
+	private String ecno;
+	private String imsi;
+	private String imei;
+	private String brand;
+	private String deviceModel;
+	/**  The Absolute Radio Frequency Channel Number */
+	private String arfcn;
+	private String rscp;
+	private String ecdno;
+	
+	/**
+	 * @return the rnc
+	 */
+	public String getRnc() {
+		return rnc;
+	}
+
+	/**
+	 * @return the snr
+	 */
+	public String getSnr() {
+		return snr;
+	}
+
+	/**
+	 * @return the psc
+	 */
+	public String getPsc() {
+		return psc;
+	}
+
+	/**
+	 * @return the ecno
+	 */
+	public String getEcno() {
+		return ecno;
+	}
+
+	/**
+	 * @return the imsi
+	 */
+	public String getImsi() {
+		return imsi;
+	}
+
+	/**
+	 * @return the imei
+	 */
+	public String getImei() {
+		return imei;
+	}
+
+	/**
+	 * @return the brand
+	 */
+	public String getBrand() {
+		return brand;
+	}
+
+	/**
+	 * @return the deviceModel
+	 */
+	public String getDeviceModel() {
+		return deviceModel;
+	}
+
+	/**
+	 * @return the arfcn
+	 */
+	public String getArfcn() {
+		return arfcn;
+	}
+
+	/**
+	 * @param rnc the rnc to set
+	 */
+	public void setRnc(String rnc) {
+		this.rnc = rnc;
+	}
+
+	/**
+	 * @param snr the snr to set
+	 */
+	public void setSnr(String snr) {
+		this.snr = snr;
+	}
+
+	/**
+	 * @param psc the psc to set
+	 */
+	public void setPsc(String psc) {
+		this.psc = psc;
+	}
+
+	/**
+	 * @param ecno the ecno to set
+	 */
+	public void setEcno(String ecno) {
+		this.ecno = ecno;
+	}
+
+	/**
+	 * @param imsi the imsi to set
+	 */
+	public void setImsi(String imsi) {
+		this.imsi = imsi;
+	}
+
+	/**
+	 * @param imei the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	/**
+	 * @param brand the brand to set
+	 */
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	/**
+	 * @param deviceModel the deviceModel to set
+	 */
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+
+	/**
+	 * @param arfcn the arfcn to set
+	 */
+	public void setArfcn(String arfcn) {
+		this.arfcn = arfcn;
+	}
+
 	public String getNetwork() {
 		return network;
 	}
@@ -57,7 +198,7 @@ public class SpeedTestHistoryDTO {
 
 	public String getStartTimeDisplay() {
 		if (this.startTime != null) {
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			return df.format(this.startTime);
 		}
 		return null;
@@ -83,12 +224,12 @@ public class SpeedTestHistoryDTO {
 		this.serverName = serverName;
 	}
 
-	public String getIps() {
-		return ips;
+	public String getIsp() {
+		return isp;
 	}
 
-	public void setIps(String ips) {
-		this.ips = ips;
+	public void setIsp(String isp) {
+		this.isp = isp;
 	}
 
 	public Date getStartTime() {
@@ -291,12 +432,12 @@ public class SpeedTestHistoryDTO {
 		this.networkTechnology = networkTechnology;
 	}
 
-	public String getIpsCountryCode() {
-		return ipsCountryCode;
+	public String getIspCountryCode() {
+		return ispCountryCode;
 	}
 
-	public void setIpsCountryCode(String ipsCountryCode) {
-		this.ipsCountryCode = ipsCountryCode;
+	public void setIspCountryCode(String ispCountryCode) {
+		this.ispCountryCode = ispCountryCode;
 	}
 
 	public String getServerCountryCode() {
@@ -335,6 +476,21 @@ public class SpeedTestHistoryDTO {
 		this.signalStrength = signalStrength;
 	}
 
+	public String getRscp() {
+		return rscp;
+	}
+
+	public void setRscp(String rscp) {
+		this.rscp = rscp;
+	}
+
+	public String getEcdno() {
+		return ecdno;
+	}
+
+	public void setEcdno(String ecdno) {
+		this.ecdno = ecdno;
+	}
 	@Override
     public String toString() {
         return "SpeedTestHistoryDTO{" +

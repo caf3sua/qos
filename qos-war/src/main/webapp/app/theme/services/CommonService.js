@@ -5,8 +5,8 @@
 
 'use strict';
 angular.module('BlurAdmin.theme')
-    .service('CommonService', ['$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg', 'AppUtil',
-        function ($http, $cookieStore, $rootScope, $timeout, BackendCfg, AppUtil) {
+    .service('CommonService', ['$http', '$cookieStore', '$rootScope', '$timeout', 'BackendCfg', 'AppUtil', '$cordovaNetwork',
+        function ($http, $cookieStore, $rootScope, $timeout, BackendCfg, AppUtil, $cordovaNetwork) {
             var service = this;
             
             service.getLocation = function (callback) {
@@ -74,7 +74,12 @@ angular.module('BlurAdmin.theme')
             }; 
             
             service.createHistory = function (data, callback) {
-//                BackendCfg.setupHttp($http);
+            	var type = '';
+            	try {
+            		type = $cordovaNetwork.getNetwork(); 
+            	} catch (e) {
+            		type = 'UNKNOWN';
+            	}
                 // Get data from global
                 var user = $rootScope.globals.currentUser;
                 var selectedServer = $rootScope.selectedServer;
@@ -85,9 +90,9 @@ angular.module('BlurAdmin.theme')
                 var latencyData = data.latency;
                 // 
                 var history = {};
-                history.applicationType = "FTTH";
+                history.applicationType = "Website";
                 history.serverName = selectedServer.name;
-                history.ips = geoLocation.isp;
+                history.isp = geoLocation.isp;
                 
                 history.startTime = data.startTime;
                 history.endTime = data.endTime;
@@ -99,6 +104,7 @@ angular.module('BlurAdmin.theme')
                 history.province = null;
                 history.district = null;
                 history.address = null;
+                
                 if (data.unitType == 0) {
                 	history.downloadSpeed = AppUtil.averagePoint(downloadData, 2);
                 	history.downloadSpeed = (history.downloadSpeed / MBPS_TO_KBPS).toFixed(2);
@@ -111,13 +117,24 @@ angular.module('BlurAdmin.theme')
                     
                     history.maxUploadSpeed = AppUtil.maxPoint(uploadData);
                     history.maxUploadSpeed = (history.maxUploadSpeed / MBPS_TO_KBPS).toFixed(2);
+                    
+                    // Convert to bit per second
+                    history.downloadSpeed = history.downloadSpeed * 1000;
+                    history.maxDownloadSpeed = history.maxDownloadSpeed * 1000;
+                    history.uploadSpeed = history.uploadSpeed * 1000;
+                    history.maxUploadSpeed = history.maxUploadSpeed * 1000;
                 } else {
                 	history.downloadSpeed = AppUtil.averagePoint(downloadData, 2);
                     history.maxDownloadSpeed = AppUtil.maxPoint(downloadData);
                     history.uploadSpeed = AppUtil.averagePoint(uploadData, 2);
                     history.maxUploadSpeed = AppUtil.maxPoint(uploadData);
+                    // Convert to bit per second
+                    history.downloadSpeed = history.downloadSpeed * 1000000;
+                    history.maxDownloadSpeed = history.maxDownloadSpeed * 1000000;
+                    history.uploadSpeed = history.uploadSpeed * 1000000;
+                    history.maxUploadSpeed = history.maxUploadSpeed * 1000000;
                 }
-                // TODO
+
                 history.packageLoss = 0;
                 history.latency = AppUtil.average(latencyData, 0);
                 history.minLatency = AppUtil.min(latencyData);
@@ -127,13 +144,13 @@ angular.module('BlurAdmin.theme')
                 history.longitudes = geoLocation.lon;
                 history.mcc = null;
                 history.mnc = null;
-                history.networkTechnology = "WWAN";
+                history.networkTechnology = type;
                 history.cid = null;
                 history.lac = null;
                 history.signalStrengthUnit = "dB";
                 history.signalStrength = null;
                 // Extend
-                history.ipsCountryCode = geoLocation.countryCode;
+                history.ispCountryCode = geoLocation.countryCode;
                 history.serverCountryCode = selectedServer.countryCode;
 
                 $http.post(BackendCfg.contextPath(location) + '/api/history/create', history ).then(function(result) {

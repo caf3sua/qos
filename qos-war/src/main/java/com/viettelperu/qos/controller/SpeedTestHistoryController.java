@@ -153,10 +153,9 @@ public class SpeedTestHistoryController extends BaseController {
     private void convertDTOintoEntity(SpeedTestHistoryDTO dto, SpeedTestHistory entity) {
     	entity.setApplicationType(ApplicationType.valueOf(dto.getApplicationType()));
     	entity.setServerName(dto.getServerName());
-    	entity.setIps(dto.getIps());
+    	entity.setIsp(dto.getIsp());
     	entity.setStartTime(dto.getStartTime());
     	entity.setEndTime(dto.getEndTime());
-    	entity.setDuration(dto.getDuration());
     	entity.setIpAddress(dto.getIpAddress());
     	entity.setUserName(dto.getUserName());
     	entity.setDepartmentZone(dto.getDepartmentZone());
@@ -181,8 +180,21 @@ public class SpeedTestHistoryController extends BaseController {
     	entity.setSignalStrengthUnit(SignalStrength.valueOf(dto.getSignalStrengthUnit()));
     	entity.setSignalStrength(dto.getSignalStrength());
     	// Extend
-    	entity.setIpsCountryCode(dto.getIpsCountryCode());
+    	entity.setIspCountryCode(dto.getIspCountryCode());
     	entity.setServerCountryCode(dto.getServerCountryCode());
     	entity.setNetwork(dto.getNetwork());
+    	
+    	entity.setRnc(dto.getRnc());
+    	entity.setSnr(dto.getSnr());
+    	entity.setPsc(dto.getPsc());
+    	entity.setEcno(dto.getEcno());
+    	entity.setImsi(dto.getImsi());
+    	entity.setImei(dto.getImei());
+    	entity.setBrand(dto.getBrand());
+    	entity.setDeviceModel(dto.getDeviceModel());
+    	/**  The Absolute Radio Frequency Channel Number */
+    	entity.setArfcn(dto.getArfcn());
+    	entity.setRscp(dto.getRscp());
+    	entity.setEcdno(dto.getEcdno());
     }
 }

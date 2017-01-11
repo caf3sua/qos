@@ -6,10 +6,10 @@
   'use strict';
 
   angular.module('BlurAdmin.pages.login')
-    .controller('LoginPageCtrl', ['$scope', '$rootScope', '$location', 'AuthService', LoginPageCtrl]);
+    .controller('LoginPageCtrl', ['$scope', '$rootScope', '$location', 'AuthService', '$window', '$state', LoginPageCtrl]);
 
   /** @ngInject */
-  function LoginPageCtrl($scope, $rootScope, $location, AuthService) {
+  function LoginPageCtrl($scope, $rootScope, $location, AuthService, $window, $state) {
 	  	var lc = this;
 
 	    (function initController() {
@@ -25,12 +25,14 @@
 	        lc.dataLoading = true;
 	        $rootScope.isSubmitted = true;
 	        AuthService.login(lc.user.username, lc.user.password, function (response) {
+	        	console.log('AuthService.login, username:' + lc.user.username + ", password:" + lc.user.password + ", response code:" + response.code==200);
 	            if (response.code==200) {
 	                AuthService.createJWTToken(response.result.user, response.result.token);
 	                AuthService.setCredentials();
 	                lc.dataLoading = false;
 	                $rootScope.isSubmitted = false;
 	                $location.path('/home');
+	                $window.location.href = $location.absUrl();
 	                $window.location.reload();
 	            } else {
 	                lc.error = response.result;

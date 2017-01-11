@@ -13,7 +13,7 @@
     };
 
     /** @ngInject */
-    this.$get = function($state, layoutSizes) {
+    this.$get = function($state, layoutSizes, $timeout) {
       return new _factory();
 
       function _factory() {
@@ -47,7 +47,15 @@
         };
 
         this.toggleMenuCollapsed = function() {
-          isMenuCollapsed = !isMenuCollapsed;
+        	console.log('click toggleMenuCollapsed');
+        	isMenuCollapsed = !isMenuCollapsed;
+        	$timeout(function () {
+        		$('#speedChart').highcharts().reflow();
+        		$('#downloadGraphChart').highcharts().reflow();
+        		$('#uploadGraphChart').highcharts().reflow();
+        		$('#latencyGraphConfig').highcharts().reflow();
+        		$scope.$apply();
+        	}, 200);
         };
 
         this.getAllStateRefsRecursive = function(item) {

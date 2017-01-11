@@ -82,28 +82,6 @@ public class UserController extends BaseController {
     	Validate.isTrue(StringUtils.isNotBlank(userDTO.getUsername()), "Username/phone is blank");
         Validate.isTrue(StringUtils.isNotBlank(userDTO.getEncryptedPassword()), "Encrypted password is blank");
         String password = EncryptionUtil.decryptPassword(userDTO);
-
-        // Check mode encrypt
-    	String modeEncrypt = env.getProperty("mode_enable_encrypt");
-        LOG.debug("Mode encrypt :" + modeEncrypt);
-        // Get wsUsername/wsPassword
-    	String wsUsernameEncrypted = env.getProperty("wsUsername_getMSISDN");
-    	String wsUsername = EncryptionUtil.decrypt(wsUsernameEncrypted, modeEncrypt);
-    	String wsPasswordEncrypted = env.getProperty("wsPassword_getMSISDN");
-    	String wsPassword = EncryptionUtil.decrypt(wsPasswordEncrypted, modeEncrypt);
-        GetMSISDNResponse responseSoap = qosWebService.getMSISDN(wsUsername, wsPassword, userDTO.getIp());
-        
-        // Get information
-        ResultResponse result = responseSoap.getReturn();
-        if (null != result) {
-        	if (result.getCode() == 0) {
-//                user.setIsdn(result.getDesc());
-//                user.setUsername(result.getDesc());
-        	}
-        } else {
-        	throw new AuthenticationFailedException("Cannot find ISDN by IpAddress");
-        }
-        
         
         LOG.info("Looking for user by username: " + userDTO.getUsername());
         User user = userService.findByUsername(userDTO.getUsername());

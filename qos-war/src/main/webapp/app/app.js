@@ -19,6 +19,7 @@ var BlurAdmin = angular.module('BlurAdmin', [
   'highcharts-ng',
   'ng.deviceDetector',
   'ngMap',
+  'ngCordova.plugins.network',
   
   'BlurAdmin.theme',
   'BlurAdmin.pages',

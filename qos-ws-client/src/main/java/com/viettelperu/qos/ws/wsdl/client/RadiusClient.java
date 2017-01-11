@@ -67,11 +67,15 @@ public class RadiusClient extends WebServiceGatewaySupport {
 		ClientInterceptor[] interceptors = new ClientInterceptor[1];
 		interceptors[0] = new LogbackInterceptor();
 		webServiceTemplate.setInterceptors(interceptors);
-		GetMSISDNResponse response = (GetMSISDNResponse) webServiceTemplate
-				.marshalSendAndReceive(
+		//GetMSISDNResponse response = (GetMSISDNResponse) 
+		webServiceTemplate.marshalSendAndReceive(
 						this.getDefaultUri(),
 						request,
 						new SoapActionCallback(this.getDefaultUri() + "/GetMSISDN"));
+		// Get result
+		ResultResponse result = ((LogbackInterceptor)interceptors[0]).getResult();
+		GetMSISDNResponse response = new GetMSISDNResponse();
+		response.setReturn(result);
 
 		log.info(String.format("End RadiusGW_getMSISDN: result=[%s]", printGetMSISDNResponse(response)));
 		return response;
