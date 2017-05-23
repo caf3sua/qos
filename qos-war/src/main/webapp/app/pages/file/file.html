@@ -8,12 +8,12 @@
            ba-panel-class="medium-panel qos-medium-panel">
         <button type="button" ng-disabled="form.$invalid || measuring" class="btn btn-primary btn-sm" ng-click="startUpload()">
                 <span>
-                    <i class="fa fa-flag" aria-hidden="true"></i> Start
+                    <i class="fa fa-flag" aria-hidden="true"></i> {{'file.start' | translate}}
                 </span>
            </button>
            
            <pre>
-           uploadingSpeed{{uploadingSpeed}}
+           {{'file.uploadingSpeed' | translate}}{{uploadingSpeed}}
            </pre>
       </div>
     </div>

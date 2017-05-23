@@ -1,0 +1,155 @@
+{
+	"index": {
+      	"title": "Bitel QoS speed test"
+      	, "create_by": "Created by "
+      	, "copy_right": "&copy; All rights reserved, Bitel 2016"
+	}
+	, "404": {
+      	"title": "Bitel QoS speed test"
+      	, "header": "404 Error"
+      	, "description": "Sorry, that page doesn't exist. "
+      	, "go_to_home": "Go to Home Page."
+	}
+	, "about": {
+      	"header_api": "General API Information"
+      	, "heading1": "Guía para usuario"
+      	, "heading1_content": "•       El recibo por concepto del servicio por el mes siguiente, será emitido el 15 de este mes.•       Plazo de pago: El cliente tiene plazo para pagar hasta el cierre del penúltimo día del mes, caso contrario se suspenderá su tráfico de salida (el cliente podrá recibir llamadas y otros servicios, pero no podrá realizar llamadas o usar el tráfico). Si no ha pagado hasta el último día del mes siguiente, su tráfico será suspendido bidireccionalmente (no podrá recibir ni realizar llamadas o ningún tipo de consumo de tráfico).•       Ejemplo: El 15 setiembre se le enviará al cliente el recibo por concepto del mes de octubre, y éste tendrá plazo para pagar hasta el 29 de setiembre; de lo contrario se suspenderá su tráfico de salida a partir de las 00 horas del 30 de setiembre. Si no paga hasta el 31 de octubre, ese mismo día se le suspenderá su tráfico de entrada y salida (bidireccionalmente).•       Si deseas recibir tu recibo vía web o email regístrate enviando un SMS con la palabra “web” para recibir vía web, y un SMS con tu correo electrónico  al 1026. (Ejemplo: prueba@xxxmail.com)"
+      	, "heading2": "Puntos en Retail"
+      	, "heading2_content": "1)      Puntos de venta, grifos, farmacias y bodegas.2)      En los canales de distribución y tiendas de Bitel.3)      Bancos: En ventanilla, agentes autorizados y banca por Internet del BCP y Scotiabank.4)      Con la tarjeta física: *121*PIN#."
+      	, "heading3": "Central de atención"
+      	, "heading3_content": "1)      Pago electrónico: En gasolineras, farmacias y bodegas.2)      Pago por Banco: En ventanilla, agentes autorizados y banca por Internet del BCP, Scotiabank y BBVA.3)      Pago directo a Bitel: En los centros de atención al cliente, agentes autorizados de Bitel, y puntos de venta de Bitel a nivel nacional."
+      	, "header_info": "INFORMACIÓN A ABONADOS Y USUARIOS"
+      	, "header_info_desc1": "Ciclo de facturación"
+      	, "header_info_desc2": "Cobertura"
+      	, "header_info_desc3": "Accesibilidad"
+      	, "header_info_desc4": "Servicio de telecomunicaciones en casos de emergencia"
+      	, "header_info_desc5": "Legal y Regulatorio"
+	}
+	, "dashboard": {
+      	"main": {
+      		"powered_by" : "Powered by"
+      		, "please_wait" : "Please wait..."
+      		, "start" : "Start"
+      	}
+      	, "chart" : {
+      		"isp" : "ISP"
+      		, "ipv4" : "IPv4"
+      		, "browser" : "Browser"
+      		, "version" : "version"
+      		, "more_info" : "More information"
+      	}
+      	, "modal" : {
+      		"information" : "Information"
+      		, "isp" : "ISP"
+      		, "connection_type" : "Connection type"
+      		, "ipv4" : "IPv4"
+      		, "ipv6" : "Ipv6"
+      		, "asn" : "ASN"
+      		, "browser" : "Browser"
+      		, "system" : "System"
+      		, "version" : "version"
+      		, "location" : "Location"
+      	}
+	}
+	, "file": {
+      	"start": "Start"
+      	, "uploadingSpeed": "uploadingSpeed"
+	}
+	, "history": {
+      	"rows_on_page": "Rows on page"
+      	, "date": "Date"
+      	, "isp" : "ISP"
+      	, "server" : "Server"
+      	, "download" : "Download"
+      	, "max_download" : "Max Download"
+      	, "upload" : "Upload"
+      	, "max_upload" : "Max Upload"
+      	, "latency" : "Latency"
+      	, "action" : "Action"
+      	, "title_history_delete" : "Confirm History Delete!"
+      	, "confirm_history_delete" : "Are you sure to delete History record ID#{{historyId}} from system ?"
+      	, "btn_cancel" : "Cancel"
+      	, "btn_delete" : "Delete"
+      	, "search_date" : "Search Date"
+      	, "search_isp" : "Search ISP"
+      	, "search_server" : "Search Server"
+      	, "search_download" : "Search Download"
+      	, "search_max_download" : "Search Max Download"
+      	, "search_upload" : "Search Upload"
+      	, "search_max_upload" : "Search Max Upload"
+      	, "search_latency" : "Search Latency"
+      	, "detail" : {
+			"history_detail" : "History Detail"
+			, "ID" : "ID"
+			, "application_type" : "Application type"
+			, "server_name" : "Server name"
+			, "IPS" : "IPS"
+			, "duration" : "Duration"
+			, "ip_address" : "IP address"
+			, "department_zone" : "Department zone"
+			, "province" : "Province"
+			, "district" : "District"
+			, "address" : "Address"
+			, "download_speed" : "Download speed"
+			, "max_download_speed" : "Max Download speed"
+			, "upload_speed" : "Upload speed"
+			, "max_upload_speed" : "Max Upload speed"
+			, "package_loss" : "Package Loss"
+			, "latency" : "Latency"
+			, "min_latency" : "Min latency"
+			, "variation_latency" : "Variation latency"
+			, "GPS" : "GPS"
+			, "MCC" : "MCC"
+			, "MNC" : "MNC"
+			, "network_technology" : "Network Technology"
+			, "Cid" : "Cid"
+			, "LACS" : "LACS"
+			, "signal_strength" : "Signal Strength"    
+			, "information" : "Information"
+			, "network_connection" : "Network Connection"
+			, "GMS" : "GMS"
+      	}
+	}
+	, "home": {
+      	"typo_title_1": "Centros de atención"
+      	, "typo_content_1": "Eget augue, lacus erat ante egestas scelerisque aliquam, metus molestie leo in habitasse magnamaecenas"
+      	, "typo_title_2": "Distribuidores"
+      	, "typo_content_2": "Augue massa et parturient, suspendisse orci nec scelerisque sit, integer nam mauris pede consequat in velit"
+      	, "typo_title_3": "Puntos de recarga y de pago"
+      	, "typo_content_3": "Eget turpis, tortor lobortis porttitor, vestibulum nullam vehicula aliquam"
+      	, "lean_more": "Lean more"
+	}
+	, "login": {
+      	"username": "Username/number"
+      	, "username_required": "Username/number is required"
+      	, "username_invalid": "Username/number is invalid"
+      	, "password": "Password"
+      	, "password_required": "Password is required"
+      	, "remember_me": "Remember me"
+      	, "placeholder_password": "Password"
+      	, "placeholder_username": "Username or number"
+      	, "btn_sign_in" : "Sign in"
+	}
+	, "register": {
+      	"username": "Username/number"
+      	, "username_required": "Username/number is required"
+      	, "email": "Email"
+      	, "email_required": "Email is required"
+      	, "email_invalid": "Email is invalid"
+      	, "password": "Password"
+      	, "password_required": "Password is required"
+      	, "verify": "Verify"
+      	, "password_not_match": "Password don't match"
+      	, "btn_register": "Register"
+      	, "btn_cancel": "Cancel"
+	}
+	, "setting": {
+      	"title": "How to optimize your test?"
+      	, "description1": "To optimize measurement, please stop every download in progress on your computer as well as on devices (other computers, tables, smartphones, game consoles) connected to your Internet connection."
+      	, "description2": "Prefer a wired connection to a Wifi or powerline connection which are by far less stable for high speed connections."
+      	, "description3": "Repeat the test several times to check the stability of the results."
+      	, "select_bit_rate": "Select bitrate unit"
+      	, "select_server": "Select Server Information"
+      	, "server_selected": "Server selection"
+	}
+}

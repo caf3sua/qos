@@ -11,7 +11,7 @@
 		<div class="qos-app-btn-panel">
 			<!-- More information -->
 			<span class="pull-right" style="position: absolute;right: 20px;top: 10px;">
-    			Powered by <img src="assets/img/logo.png" width="55px;">
+    			{{'dashboard.main.powered_by' | translate}} <img src="assets/img/logo.png" width="55px;">
     		</span>
     		<div>
                 <table style="width: 100%">
@@ -20,10 +20,10 @@
                             <!-- Start button -->
 			                <button type="button" ng-disabled="form.$invalid || measuring" class="btn btn-primary btn-sm" ng-click="app.startMeasure()">
 			                     <span ng-show="measuring">
-			                         <i class="fa fa-spinner fa-spin"></i> Please wait...
+			                         <i class="fa fa-spinner fa-spin"></i> {{'dashboard.main.please_wait' | translate}}
 			                     </span>
 			                     <span ng-show="!measuring">
-			                         <i class="fa fa-flag" aria-hidden="true"></i> Start
+			                         <i class="fa fa-flag" aria-hidden="true"></i> {{'dashboard.main.start' | translate}}
 			                     </span>
 			                </button>
                         </td>
@@ -46,12 +46,7 @@
             <div class="cssload-loader" ng-show="!measuring"></div>
         </div>
         
-        <!-- Progress bar -->
-         <!-- 
-         <uib-progressbar class="progress-striped active" value="downloadProgress">{{downloadProgress}}% download</uib-progressbar>
-         <uib-progressbar class="progress-striped active" value="uploadProgress" type="success"><b>{{uploadProgress}}%</b> upload</uib-progressbar>
-          -->
-          <uib-progressbar class="progress-striped active" value="downloadProgress"></uib-progressbar>
+         <uib-progressbar class="progress-striped active" value="downloadProgress"></uib-progressbar>
          <uib-progressbar class="progress-striped active" value="uploadProgress" type="success"></uib-progressbar>
       </div>
     </div>
@@ -87,18 +82,5 @@
  	<input type="hidden" id="DownloadTime" name="DownloadTime" >
  	<input type="hidden" id="UploadData" name="UploadData"> 
  	<input type="hidden" id="UploadTime" name="UploadTime">
- 	<!-- 
-	<button type="button" id="triggerIframeUploadBtn">
-	   <i class="fa fa-flag" aria-hidden="true"></i> Upload
-	</button>
-	<input type="text" id="uploadFrameUrl" name="uploadFrameUrl" value="{{uploadFrame}}" >
-	<input type="text" id="serverContextUrl" name="serverContextUrl" value="{{serverContextUrl}}" > 
-	<div>
-		{{indexFrame}}
-	</div>
-	<iframe width="400" height="220" ng-src="{{indexFrame}}" id="IndexIframe">
-	   <p>Your browser does not support iframes.</p>
-	</iframe>
-	 -->
 </div>
 </div>

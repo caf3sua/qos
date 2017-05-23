@@ -41,18 +41,18 @@
                     <div class="description qos-description">
 			            <table class="description-item-info">
 			                <tr>
-			                    <td class="item-title">ISP</td><td class="item-value">{{geoLocation.isp}}</td>
+			                    <td class="item-title">{{'dashboard.chart.isp' | translate}}</td><td class="item-value">{{geoLocation.isp}}</td>
 			                </tr>
 			                <tr>
-			                    <td>IPv4</td><td class="item-value">{{geoLocation.query}}</td>
+			                    <td>{{'dashboard.chart.ipv4' | translate}}</td><td class="item-value">{{geoLocation.query}}</td>
 			                </tr>
 			                <tr>
-			                    <td>Browser</td><td class="item-value"><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} (version: {{data.browser_version}})</div></td>
+			                    <td>{{'dashboard.chart.browser' | translate}}</td><td class="item-value"><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} ({{'dashboard.chart.version' | translate}}: {{data.browser_version}})</div></td>
 			                </tr>
 			            </table>
 			            
 			            <a href ng-click="openInfoModal()" class="pull-left" id="more-info-link">
-			                <i class="fa fa-info-circle" aria-hidden="true"></i>  More information
+			                <i class="fa fa-info-circle" aria-hidden="true"></i>  {{'dashboard.chart.more_info' | translate}}
 			            </a>
 			        </div>
 			        <div class="chart-icon-showoff">

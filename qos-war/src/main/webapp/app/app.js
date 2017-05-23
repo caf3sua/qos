@@ -11,15 +11,12 @@ var BlurAdmin = angular.module('BlurAdmin', [
   "xeditable",
   'ui.slimscroll',
   'ngFileUpload',
-//  'ngJsTree',
-//  'angular-progress-button-styles',
   'ngCookies',
-//  'googlechart',
-//  'adaptv.adaptStrap',
   'highcharts-ng',
   'ng.deviceDetector',
   'ngMap',
   'ngCordova.plugins.network',
+  'pascalprecht.translate',
   
   'BlurAdmin.theme',
   'BlurAdmin.pages',
@@ -28,6 +25,17 @@ var BlurAdmin = angular.module('BlurAdmin', [
 
 BlurAdmin.run(['$rootScope', '$timeout', '$location', '$cookieStore', '$http', 'baSidebarService', 'BackendCfg',
    function ($rootScope, $timeout, $location, $cookieStore, $http, baSidebarService, BackendCfg) {
+//		// angular translate
+//	    $scope.langs = {en:'English', zh_CN:'中文', vi_VN:'Tiếng Việt'};
+//	    //$scope.selectLang = $scope.langs[$translate.proposedLanguage()] || "English";
+//	    $scope.selectLang = $scope.langs[$translate.proposedLanguage()] || "English";
+//	    $scope.setLang = function(langKey) {
+//	      // set the current lang
+//	      $scope.selectLang = $scope.langs[langKey];
+//	      // You can change the language during runtime
+//	      $translate.use(langKey);
+//	    };
+    
        // keep user logged in after page refresh
        $rootScope.globals = $cookieStore.get('globals') || {};
        if ($rootScope.globals.currentUser) {

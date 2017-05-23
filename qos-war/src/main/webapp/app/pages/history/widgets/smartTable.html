@@ -1,7 +1,7 @@
 <!-- http://plnkr.co/edit/XoGDuN?p=preview -->
 <div class="horizontal-scroll">
   <div class="form-group select-page-size-wrap ">
-    <label>Rows on page
+    <label>{{'history.rows_on_page' | translate}}
       <select class="form-control selectpicker show-tick" title="Rows on page" selectpicker
               ng-model="dataTablePageSize" ng-options="i for i in [5,10,15,20,25]">
       </select>
@@ -11,26 +11,26 @@
     <thead>
     <tr class="sortable ">
       <th class="table-id" st-sort="rowId" st-sort-default="false"><i class="fa fa-list-ol" aria-hidden="true"></i></th>
-      <th st-sort="date"><i class="fa fa-calendar" aria-hidden="true"></i> Date</th>
-      <th st-sort="isp"><i class="fa fa-globe" aria-hidden="true"></i> ISP</th>
-      <th st-sort="serverName"><i class="fa fa-server" aria-hidden="true"></i> Server</th>
-      <th st-sort="downloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> Download</th>
-      <th st-sort="maxDownloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> Max Download</th>
-      <th st-sort="uploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</th>
-      <th st-sort="maxUploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Max Upload</th>
-      <th st-sort="latency"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Latency</th>
-      <th>Action</th>
+      <th st-sort="date"><i class="fa fa-calendar" aria-hidden="true"></i>{{'history.date' | translate}}</th>
+      <th st-sort="isp"><i class="fa fa-globe" aria-hidden="true"></i> {{'history.isp' | translate}}</th>
+      <th st-sort="serverName"><i class="fa fa-server" aria-hidden="true"></i> {{'history.server' | translate}}</th>
+      <th st-sort="downloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> {{'history.download' | translate}}</th>
+      <th st-sort="maxDownloadSpeed"><i class="fa fa-cloud-download" aria-hidden="true"></i> {{'history.max_download' | translate}}</th>
+      <th st-sort="uploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> {{'history.upload' | translate}}</th>
+      <th st-sort="maxUploadSpeed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> {{'history.max_upload' | translate}}</th>
+      <th st-sort="latency"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> {{'history.latency' | translate}}</th>
+      <th>{{'history.action' | translate}}</th>
     </tr>
     <tr>
       <th></th>
-      <th><input st-search="startTimeDisplay" placeholder="Search Date" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="isp" placeholder="Search ISP" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="serverName" placeholder="Search Server" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="downloadSpeed" placeholder="Search Download" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="maxDownloadSpeed" placeholder="Search Max Download" class="input-sm form-control search-input" type="search"/></th>
-      <th><input st-search="uploadSpeed" placeholder="Search Upload" class="input-sm form-control search-input" type="search"/>
-      <th><input st-search="maxUploadSpeed" placeholder="Search Max Upload" class="input-sm form-control search-input" type="search"/>
-      <th><input st-search="latency" placeholder="Search Latency" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="startTimeDisplay" placeholder="{{'history.search_date' | translate}}" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="isp" placeholder="{{'history.search_isp' | translate}}" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="serverName" placeholder="{{'history.search_server' | translate}}" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="downloadSpeed" placeholder="{{'history.search_download' | translate}}" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="maxDownloadSpeed" placeholder="{{'history.search_max_download' | translate}}" class="input-sm form-control search-input" type="search"/></th>
+      <th><input st-search="uploadSpeed" placeholder="{{'history.search_upload' | translate}}" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="maxUploadSpeed" placeholder="{{'history.search_max_upload' | translate}}" class="input-sm form-control search-input" type="search"/>
+      <th><input st-search="latency" placeholder="{{'history.search_latency' | translate}}" class="input-sm form-control search-input" type="search"/>
       </th>
       <th></th>
     </tr>
@@ -66,13 +66,13 @@
 
 <script type="text/ng-template" id="confirmContentModal.html">
         <div class="modal-header">
-            <h3 class="modal-title">Confirm History Delete!</h3>
+            <h3 class="modal-title">{{'history.title_history_delete' | translate}}</h3>
         </div>
         <div class="modal-body">
-            <p>Are you sure to delete History record ID#{{historyId}} from system ?</>
+            <p>{{'history.confirm_history_delete' | translate:'{ historyId: historyId }'}}</>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-primary" type="button" ng-click="ok()">Delete</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">{{'history.btn_cancel' | translate}}</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()">{{'history.btn_delete' | translate}}</button>
         </div>
 </script>

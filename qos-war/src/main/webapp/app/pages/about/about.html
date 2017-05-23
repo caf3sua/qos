@@ -1,75 +1,61 @@
 <div ba-panel ba-panel-class="profile-page">
   <div class="panel-content">
-    <h3 class="with-line">General API Information</h3>
+    <h3 class="with-line">{{'about.header_api' | translate}}</h3>
 
     <div class="row">
       <div class="col-md-12">
       	<div ba-panel
 		     ba-panel-class="tabs-panel xsmall-panel with-scroll">
 		  <uib-tabset>
-		    <uib-tab heading="Guía para usuario">
+		    <uib-tab heading="{{'about.heading1' | translate}}">
 		      <p class="text-center">
-		        Guía para usuario
+		        {{'about.heading1' | translate}}
 		      </p>
 		
 		      <div class="kameleon-icon-tabs kameleon-icon with-round-bg danger"><img ng-src="{{::( 'Key' | kameleonImg )}}"></div>
-		      <p>
-•       El recibo por concepto del servicio por el mes siguiente, será emitido el 15 de este mes.
-•       Plazo de pago: El cliente tiene plazo para pagar hasta el cierre del penúltimo día del mes, caso contrario se suspenderá su tráfico de salida (el cliente podrá recibir llamadas y otros servicios, pero no podrá realizar llamadas o usar el tráfico). Si no ha pagado hasta el último día del mes siguiente, su tráfico será suspendido bidireccionalmente (no podrá recibir ni realizar llamadas o ningún tipo de consumo de tráfico).
-•       Ejemplo: El 15 setiembre se le enviará al cliente el recibo por concepto del mes de octubre, y éste tendrá plazo para pagar hasta el 29 de setiembre; de lo contrario se suspenderá su tráfico de salida a partir de las 00 horas del 30 de setiembre. Si no paga hasta el 31 de octubre, ese mismo día se le suspenderá su tráfico de entrada y salida (bidireccionalmente).
-•       Si deseas recibir tu recibo vía web o email regístrate enviando un SMS con la palabra “web” para recibir vía web, y un SMS con tu correo electrónico  al 1026. (Ejemplo: prueba@xxxmail.com)
-		      </p>
+		      <p>{{'about.heading1_content' | translate}}</p>
 		    </uib-tab>
-		    <uib-tab heading="Puntos en Retail">
+		    <uib-tab heading="{{'about.heading2' | translate}}">
 		    	<p class="text-center">
-		        	Puntos en Retail
+		        	{{'about.heading2' | translate}}
 		      	</p>
 		
 		      <div class="kameleon-icon-tabs kameleon-icon with-round-bg danger"><img ng-src="{{::( 'Images' | kameleonImg )}}"></div>
-		      <p>
-1)      Puntos de venta, grifos, farmacias y bodegas.                 
-2)      En los canales de distribución y tiendas de Bitel.        
-3)      Bancos: En ventanilla, agentes autorizados y banca por Internet del BCP y Scotiabank.
-4)      Con la tarjeta física: *121*PIN#.
-		      </p>
+		      <p>{{'about.heading2_content' | translate}}</p>
 		    </uib-tab>
-		    <uib-tab heading="Central de atención">
+		    <uib-tab heading="{{'about.heading3' | translate}}">
 		    	<p class="text-center">
-		        	Central de atención
+		        	{{'about.heading3' | translate}}
 		      	</p>
 		
 		      <div class="kameleon-icon-tabs kameleon-icon with-round-bg danger"><img ng-src="{{::( 'Laptop-Signal' | kameleonImg )}}"></div>
-		      <p>
-1)      Pago electrónico: En gasolineras, farmacias y bodegas.
-2)      Pago por Banco: En ventanilla, agentes autorizados y banca por Internet del BCP, Scotiabank y BBVA.
-3)      Pago directo a Bitel: En los centros de atención al cliente, agentes autorizados de Bitel, y puntos de venta de Bitel a nivel nacional.
-		      </p>
+		      <p>{{'about.heading3_content' | translate}}</p>
 		    </uib-tab>
 		  </uib-tabset>
 		</div>
       </div>
       <div class="col-md-6"></div>
     </div>
-    <h3 class="with-line">INFORMACIÓN A ABONADOS Y USUARIOS</h3>
+    <h3 class="with-line">{{'about.header_info' | translate}}</h3>
 
     <div class="notification row clearfix">
       <div class="col-sm-6">
         <div class="form-group row clearfix">
-          <label class="col-xs-8">Ciclo de facturación</label>
+          <label class="col-xs-8">{{'about.header_info_desc1' | translate}}</label>
 
           <div class="col-xs-4">
             <switch color="primary" ng-model="switches[0]"></switch>
           </div>
         </div>
         <div class="form-group row clearfix">
-          <label class="col-xs-8">Cobertura</label>
+          <label class="col-xs-8">{{'about.header_info_desc2' | translate}}</label>
 
           <div class="col-xs-4">
             <switch color="primary" ng-model="switches[1]"></switch>
           </div>
         </div>
         <div class="form-group row clearfix">
-          <label class="col-xs-8">Accesibilidad</label>
+          <label class="col-xs-8">{{'about.header_info_desc3' | translate}}</label>
 
           <div class="col-xs-4">
             <switch color="primary" ng-model="switches[2]"></switch>
@@ -78,14 +64,14 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group row clearfix">
-          <label class="col-xs-8">Servicio de telecomunicaciones en casos de emergencia</label>
+          <label class="col-xs-8">{{'about.header_info_desc4' | translate}}</label>
 
           <div class="col-xs-4">
             <switch color="primary" ng-model="switches[3]"></switch>
           </div>
         </div>
         <div class="form-group row clearfix">
-          <label class="col-xs-8">Legal y Regulatorio</label>
+          <label class="col-xs-8">{{'about.header_info_desc5' | translate}}</label>
 
           <div class="col-xs-4">
             <switch color="primary" ng-model="switches[4]"></switch>
@@ -93,9 +79,5 @@
         </div>
       </div>
     </div>
-    <!-- 
-    <button type="button" class="btn btn-primary btn-with-icon save-profile">
-      <i class="ion-android-checkmark-circle"></i>Update Profile
-    </button> -->
   </div>
 </div>

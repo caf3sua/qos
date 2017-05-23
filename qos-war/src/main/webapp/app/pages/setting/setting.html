@@ -2,15 +2,15 @@
   <div class="panel-content">
     <div class="row">
       <div class="col-md-6">
-      	<h3 class="with-line"><i class="fa fa-info-circle" aria-hidden="true"></i> How to optimize your test?</h3>
+      	<h3 class="with-line"><i class="fa fa-info-circle" aria-hidden="true"></i> {{'setting.title' | translate}}</h3>
         <div class="form-group row clearfix">
-          <label for="inputFirstName" class="col-sm-12 control-label">To optimize measurement, please stop every download in progress on your computer as well as on devices (other computers, tables, smartphones, game consoles) connected to your Internet connection.</label>
-          <label for="inputFirstName" class="col-sm-12 control-label">Prefer a wired connection to a Wifi or powerline connection which are by far less stable for high speed connections.</label>
-          <label for="inputFirstName" class="col-sm-12 control-label">Repeat the test several times to check the stability of the results.</label>
+          <label for="inputFirstName" class="col-sm-12 control-label">{{'setting.description1' | translate}}</label>
+          <label for="inputFirstName" class="col-sm-12 control-label">{{'setting.description2' | translate}}</label>
+          <label for="inputFirstName" class="col-sm-12 control-label">{{'setting.description3' | translate}}</label>
         </div>
       </div>
       <div class="col-md-6">
-      	<h3 class="with-line">Select bitrate unit</h3>
+      	<h3 class="with-line">{{'setting.select_bit_rate' | translate}}</h3>
 	    <div class="social-profiles row clearfix">
 	      <div class="col-md-6 col-sm-4" ng-repeat="item in bitrateTypes">
 	
@@ -32,13 +32,13 @@
       </div>
     </div>
     
-    <h3 class="with-line">Select Server Information</h3>
+    <h3 class="with-line">{{'setting.select_server' | translate}}</h3>
 
 	<div class="row">
 	  <div class="col-md-6">
 		<div class="form-group row clearfix">
 		  <label for="inputEmail3" class="col-sm-4 control-label">
-			<i class="i-server"></i> Server selection
+			<i class="i-server"></i> {{'setting.server_selected' | translate}}
 		  </label>
 	
 		  <div class="col-sm-8">
@@ -54,16 +54,5 @@
 	  </div>
 	</div>
 	
-	<!-- https://github.com/marghoobsuleman/ms-Dropdown -->
-    <!-- 
-    <button type="button" class="btn btn-primary btn-with-icon save-profile">
-      <i class="ion-android-checkmark-circle"></i>Update Setting
-    </button>
-     -->
   </div>
-	<!--   
-  <pre>
-  	You selected: {{selectedServer}}
-  	You selected: {{selectedServer.status}}
-  </pre> -->
 </div>

@@ -3,7 +3,7 @@
     <button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
       <em class="ion-ios-close-empty sn-link-close"></em>
     </button>
-    <i class="ion-map modal-icon"></i><span> Information</span>
+    <i class="ion-map modal-icon"></i><span> {{'dashboard.modal.information' | translate}}</span>
   </div>
   <div class="modal-body text-center">
   	<div class="horizontal-scroll">
@@ -22,31 +22,31 @@
 	     -->
 	    <tbody style="text-align: left">
 		    <tr>
-		      <td class="table-id-info">ISP</td>
+		      <td class="table-id-info">{{'dashboard.modal.isp' | translate}}</td>
 		      <td>{{geoLocation.isp}}</td>
 		    </tr>
 		    <tr>
-		      <td>Connection type</td>
+		      <td>{{'dashboard.modal.connection_type' | translate}}</td>
 		      <td>unknown</td>
 		    </tr>
 	    	<tr>
-		      <td>IPv4</td>
+		      <td>{{'dashboard.modal.ipv4' | translate}}</td>
 		      <td>{{geoLocation.query}}</td>
 		    </tr>
 		    <tr>
-		      <td>Ipv6</td>
+		      <td>{{'dashboard.modal.ipv6' | translate}}</td>
 		      <td>IPv6 not avaiable</td>
 		    </tr>
 		    <tr>
-		      <td>ASN</td>
+		      <td>{{'dashboard.modal.asn' | translate}}</td>
 		      <td>{{geoLocation.as}}</td>
 		    </tr>
 		    <tr>
-		      <td>Browser</td>
-		      <td><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} (version: {{data.browser_version}})</div></td>
+		      <td>{{'dashboard.modal.browser' | translate}}</td>
+		      <td><div ng-show="data.browser"><img width="20px;" alt="{{data.browser}}" ng-src="assets/img/app/browsers/{{data.browser}}.svg"> {{data.browser}} ({{'dashboard.modal.version' | translate}}: {{data.browser_version}})</div></td>
 		    </tr>
 		    <tr>
-		      <td>System</td>
+		      <td>{{'dashboard.modal.system' | translate}}</td>
 		      <td><div ng-show="data.os"><img width="20px;" alt="{{data.os}}" ng-src="assets/img/app/os/{{data.os}}.svg"> {{data.os}} ({{data.os_version}})</div></td>
 		    </tr>
 	    </tbody>
