@@ -32,7 +32,7 @@ public class SpeedTestHistoryRepositoryImp extends BaseHibernateJPARepository<Sp
 //        .setMaxResults(10)
 //        .list();
 		return (List<SpeedTestHistory>) sessionFactory.getCurrentSession().createQuery("from SpeedTestHistory s where s.userName = :username order by s.id desc")
-                .setParameter("username", username).list();
+                .setParameter("username", username).setMaxResults(50).list();
 	}
 
 	@Override

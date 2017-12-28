@@ -20,10 +20,32 @@
 	        AuthService.clearCredentials();
 	    })();
 	
+	    function allLetter(inputtxt) { 
+		      var letters = /^[A-Za-z0-9_]+$/;
+		      if(inputtxt.match(letters)) {
+		    	  return true;
+		      } else {
+		    	  return false;
+		      }
+	    }
+	    
 	    lc.login = function () {
 	        console.log('received the login event for user: '+lc.user.username);
 	        lc.dataLoading = true;
 	        $rootScope.isSubmitted = true;
+	        
+	        // validate
+	        var result = allLetter(lc.user.username);
+	        console.log(result);
+	        if (result == false) {
+	        	lc.error = 'Username contains special characters';
+                lc.details = 'Username contains special characters';
+                lc.dataLoading = false;
+                $rootScope.isSubmitted = false;
+	        	return;
+	        }
+	        
+	        
 	        AuthService.login(lc.user.username, lc.user.password, function (response) {
 	        	console.log('AuthService.login, username:' + lc.user.username + ", password:" + lc.user.password + ", response code:" + response.code==200);
 	            if (response.code==200) {
